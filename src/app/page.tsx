@@ -5,16 +5,23 @@ import Link from 'next/link';
 import styles from './styles/page.module.css';
 import AuthForm from './components/AuthForm';
 import { login } from './services/authService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const HomePage: React.FC = () => {
 
   const handleLogin = (email: string, password: string) => {
+    console.log("email: ", email);
+    console.log("password: ", password);
     login(email, password)
       .then((response) => {
-        console.log('Login successful:', response);
+        toast.success('Acceso exitoso.');
+        setTimeout(() => {
+          window.location.href = '/home';
+        }, 1500);
       })
       .catch((error) => {
-        console.error('Login failed:', error);
+        toast.error('Acceso fallido. Por favor, intenta de nuevo.');
       });
   };
 
@@ -24,6 +31,7 @@ const HomePage: React.FC = () => {
           <h1>¡Nos alegra verte aquí!, Ingresa tus credenciales para continuar</h1>
           <AuthForm mode="login" onSubmit={handleLogin} />
           <p>¿Nuevo aquí? <Link href="/sign-up">Regístrate ahora</Link></p>
+          <ToastContainer />
     </div>
   );
 };

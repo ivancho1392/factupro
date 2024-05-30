@@ -15,6 +15,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
   const [error, setError] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -29,8 +30,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
         setError('Por favor, ingresa un correo electrónico válido');
         return;
       }
-      if (password.length < 5 || password.length > 20 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
-        setError('La contraseña debe tener entre 5 y 20 caracteres y contener al menos una letra mayúscula, una letra minúscula y un número');
+      if (password.length < 8 || password.length > 20 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+        setError('La contraseña debe tener entre 8 y 20 caracteres y contener al menos una letra mayúscula, una letra minúscula y un número');
         return;
       }
       if (password !== confirmPassword) {
@@ -65,6 +66,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           </div>
         </>
       )}
+        <>
       <div>
         <label>Correo Electrónico</label>
         <input
@@ -74,6 +76,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           required
         />
       </div>
+      </>
       {mode === 'sign-up' && (
         <>
          <div>
@@ -92,12 +95,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
         />
       </div>
       {mode === 'sign-up' && (
         <>
-          
           <div>
             <label>Confirmar Contraseña</label>
             <input
@@ -108,6 +109,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           </div>
         </>
       )}
+
       <button type="submit">{mode === 'login' ? 'Iniciar Sesión' : 'Registrarse'}</button>
     </form>
   );
