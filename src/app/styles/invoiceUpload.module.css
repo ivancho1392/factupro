@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+  
+  .uploadButton {
+    background-color: black;
+    color: white;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: 1px solid white;
+    margin-bottom: 16px;
+  }
+  
+  .uploadButton:hover {
+    background-color: #333;
+    border-color: #ddd;
+  }
+  
+  .formGroup {
+    margin-bottom: 16px;
+  }
+  
+  .input,
+  .select {
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .submitButton {
+    background-color: black;
+    color: white;
+    width: 50%;
+    min-width: 200px;
+    max-width: 300px;
+    align-self: flex-end;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: 1px solid white;
+  }
+  
+  .submitButton:hover {
+    background-color: #333;
+    border-color: #ddd;
+  }
