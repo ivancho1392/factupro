@@ -1,0 +1,36 @@
+.container {
+  max-width: 80%;
+  margin: auto;
+  padding: 1em;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  text-align: center; 
+}
+
+.container h1,
+.container p {
+  margin-top: 0;
+  margin-bottom: 1em; 
+}
+
+.container button {
+  display: block;
+  margin: 0 auto;
+  margin-top: 1em;
+  padding: 0.7em 1.5em;
+  color: #fff;
+  background-color: #42a542;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.container button:hover {
+  background-color: #2d6b2d;
+}
+
+.container a {
+  color: #42a542;
+}
