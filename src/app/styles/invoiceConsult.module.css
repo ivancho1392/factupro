@@ -1,0 +1,58 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+  }
+  
+  .selectMonth {
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+  }
+
+  .selectCategory {
+    margin-bottom: 16px;
+    border: 1px solid #ddd;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .filterButton {
+    background-color: black;
+    color: white;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: 1px solid white;
+    margin-bottom: 16px;
+  }
+  
+  .filterButton:hover {
+    background-color: #333;
+    border-color: #ddd;
+  }
+  
+  .reportButton {
+    background-color: black;
+    width: 50%;
+    min-width: 200px;
+    max-width: 300px;
+    color: white;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: 1px solid white;
+    align-self: flex-end;
+  }
+  
+  .reportButton:hover {
+    background-color: #333;
+    border-color: #ddd;
+  }
