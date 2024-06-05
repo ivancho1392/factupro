@@ -1,18 +1,52 @@
 import React, { useState } from 'react';
 import styles from '../styles/invoiceUpload.module.css';
 import categories from '../utils/categories';
+import { createInvoice } from '../services/api';
 
 const InvoiceUpload: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Lógica para manejar la carga de archivos
+    const selectedFile = event.target.files && event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
   };
 
   const handleSubmit = () => {
-    // Lógica para manejar la carga manual de facturas
+    if (!file) {
+      alert('Por favor, seleccione un archivo');
+      return;
+    }
+    
+    if (!amount || !category) {
+      alert('Por favor, complete todos los campos');
+      return;
+    }
+
+    const fileReader = new FileReader();
+    fileReader.onload = async () => {
+      const base64Data = fileReader.result?.toString().split(',')[1];
+      try {
+        await createInvoice({
+          UserName: 'Nombre de usuario',
+          Value: Number(amount),
+          Date: new Date().toISOString(),
+          Description: description,
+          Category: category,
+          Content: base64Data || ''
+        });
+        alert('Factura cargada exitosamente');
+        // Aquí puedes redirigir al usuario a otra página o realizar otras acciones
+      } catch (error) {
+        console.error('Error al cargar la factura:', error);
+        alert('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde');
+      }
+    };
+    fileReader.readAsDataURL(file);
   };
 
   return (
