@@ -2,7 +2,7 @@
 
 import React, { useContext } from "react";
 import styles from "./styles.module.css";
-import { AppContext } from "../context";
+import { AppContext } from "../../context";
 
 const ModalMenu = () => {
   const { modal, closeModal } = useContext(AppContext);
