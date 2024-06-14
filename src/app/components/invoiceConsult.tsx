@@ -1,50 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import styles from '../styles/invoiceConsult.module.css';
-import months from '../utils/months';
-import invoices from '../utils/invoices';
-import categories from '../utils/categories';
-import { jsPDF } from 'jspdf';
+import React, { useState, useEffect } from "react";
+import styles from "../styles/invoiceConsult.module.css";
+import months from "../utils/months";
+import categories from "../utils/categories";
+import { jsPDF } from "jspdf";
+import { getInvoices } from "../services/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const InvoiceConsult: React.FC = () => {
-  const [month, setMonth] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [selectedInvoices, setSelectedInvoices] = useState<Array<{ id: number; date: string; category: string; description: string; amount: number; imageUrl: string }>>([]);
+  const [month, setMonth] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [invoices, setInvoices] = useState<
+    Array<{
+      id: string;
+      date: string;
+      category: string;
+      description: string;
+      value: number;
+      imageUrl: string;
+    }>
+  >([]);
+  const [filteredInvoices, setFilteredInvoices] = useState<
+    Array<{
+      id: string;
+      date: string;
+      category: string;
+      description: string;
+      value: number;
+      imageUrl: string;
+    }>
+  >([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
 
   useEffect(() => {
-    // Recalcular el valor total cuando cambian las facturas seleccionadas
     const calculateTotalAmount = () => {
-      const total = selectedInvoices.reduce((accumulator, currentInvoice) => accumulator + currentInvoice.amount, 0);
+      const total = filteredInvoices.reduce(
+        (accumulator, currentInvoice) => accumulator + currentInvoice.value,
+        0
+      );
       setTotalAmount(total);
     };
     calculateTotalAmount();
-  }, [selectedInvoices]);
+  }, [filteredInvoices]);
 
   const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedMonth = event.target.value;
     setMonth(selectedMonth);
-    filterInvoices(selectedMonth, selectedCategory);
   };
 
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      if (month) {
+        try {
+          const data = await getInvoices(`2024-${month}`);
+          const transformedData = data.map((invoice: any) => {
+            const date = new Date(invoice.Date);
+            return {
+              id: invoice.InvoiceId,
+              date: date.toLocaleDateString("es-ES", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+              }),
+              category: invoice.Category || "Sin Categoría",
+              description: invoice.Description,
+              value: invoice.Value,
+              imageUrl: invoice.ImgLink,
+            };
+          });
+          setInvoices(transformedData);
+          filterInvoices(transformedData, selectedCategory);
+          console.log(transformedData); // Aquí se imprimirá la respuesta transformada
+          console.log("month:", month);
+        } catch (error) {
+          console.error("Error fetching invoices:", error);
+        }
+      }
+    };
+    fetchInvoices();
+  }, [month]);
+
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const selectedCategory = event.target.value;
     setSelectedCategory(selectedCategory);
-    filterInvoices(month, selectedCategory);
+    filterInvoices(invoices, selectedCategory);
   };
 
-  const filterInvoices = (selectedMonth: string, selectedCategory: string) => {
-    let filteredInvoices = invoices;
-    if (selectedMonth !== '') {
-      const selectedMonthNumber = months.findIndex(month => month.value === selectedMonth) ;
-      filteredInvoices = filteredInvoices.filter(invoice => {
-        const invoiceMonth = new Date(invoice.date).getMonth() + 1;
-        return invoiceMonth === selectedMonthNumber;
-      });
+  const filterInvoices = (
+    invoicesToFilter: Array<{
+      id: string;
+      date: string;
+      category: string;
+      description: string;
+      value: number;
+      imageUrl: string;
+    }>,
+    category: string
+  ) => {
+    if (category !== "") {
+      const filtered = invoicesToFilter.filter(
+        (invoice) => invoice.category === category
+      );
+      setFilteredInvoices(filtered);
+    } else {
+      setFilteredInvoices(invoicesToFilter);
     }
-    if (selectedCategory !== '') {
-      filteredInvoices = filteredInvoices.filter(invoice => invoice.category === selectedCategory);
-    }
-    setSelectedInvoices(filteredInvoices);
   };
 
   const generateReport = () => {
@@ -54,27 +116,29 @@ const InvoiceConsult: React.FC = () => {
     let y = 25;
 
     const logo = new Image();
-    logo.src = '/logo.png';
-    doc.addImage(logo, 'PNG', 10, 10, 50, 10);
-
+    logo.src = "/logo.png";
+    doc.addImage(logo, "PNG", 10, 10, 50, 10);
 
     let reportTitle = "Reporte de Facturas";
-    if (month !== '') {
-      reportTitle += ` mes ${months.find(m => m.value === month)?.label}`;
+    if (month !== "") {
+      reportTitle += ` mes ${months.find((m) => m.value === month)?.label}`;
     }
-    if (selectedCategory !== '') {
+    if (selectedCategory !== "") {
       reportTitle += ` categoría ${selectedCategory}`;
     }
-
 
     doc.text(reportTitle, 60, y);
     y += 10;
 
-    doc.line(10, y, 200, y); 
+    doc.line(10, y, 200, y);
     y += 5;
 
-    selectedInvoices.forEach(invoice => {
-      doc.text(`ID: ${invoice.id} | Fecha: ${invoice.date} | Categoría: ${invoice.category} | Descripción: ${invoice.description} | Valor: ${invoice.amount}`, 10, y);
+    filteredInvoices.forEach((invoice) => {
+      doc.text(
+        `ID: ${invoice.id} | Fecha: ${invoice.date} | Categoría: ${invoice.category} | Descripción: ${invoice.description} | Valor: ${invoice.value}`,
+        10,
+        y
+      );
       y += 5;
 
       doc.line(10, y, 200, y);
@@ -87,16 +151,35 @@ const InvoiceConsult: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <select className={styles.selectMonth} value={month} onChange={handleMonthChange}>
-        {months.map((monthOption, index) => (
-          <option key={index} value={monthOption.value}>{monthOption.label}</option>
-        ))}
+      <select
+        className={styles.selectMonth}
+        value={month}
+        onChange={handleMonthChange}
+      >
+        <option value="01">Enero</option>
+        <option value="02">Febrero</option>
+        <option value="03">Marzo</option>
+        <option value="04">Abril</option>
+        <option value="05">Mayo</option>
+        <option value="06">Junio</option>
+        <option value="07">Julio</option>
+        <option value="08">Agosto</option>
+        <option value="09">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
       </select>
-      
-      <select className={styles.selectCategory} value={selectedCategory} onChange={handleCategoryChange}>
+
+      <select
+        className={styles.selectCategory}
+        value={selectedCategory}
+        onChange={handleCategoryChange}
+      >
         <option value="">Todas las categorías</option>
         {categories.map((category, index) => (
-          <option key={index} value={category}>{category}</option>
+          <option key={index} value={category}>
+            {category}
+          </option>
         ))}
       </select>
 
@@ -112,14 +195,22 @@ const InvoiceConsult: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {selectedInvoices.map(invoice => (
+          {filteredInvoices.map((invoice) => (
             <tr key={invoice.id}>
               <td>{invoice.id}</td>
               <td>{invoice.date}</td>
               <td>{invoice.category}</td>
               <td>{invoice.description}</td>
-              <td>{invoice.amount}</td>
-              <td><a href={invoice.imageUrl} target="_blank" rel="noopener noreferrer">Ver imagen</a></td>
+              <td>{invoice.value}</td>
+              <td>
+                <a
+                  href={invoice.imageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Ver imagen
+                </a>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -131,8 +222,15 @@ const InvoiceConsult: React.FC = () => {
           </tr>
         </tfoot>
       </table>
-      
-      <button className={styles.reportButton} onClick={generateReport}>Generar Reporte</button>
+
+      <button
+        className={styles.reportButton}
+        onClick={generateReport}
+        disabled={filteredInvoices.length === 0}
+      >
+        Generar Reporte
+      </button>
+      <ToastContainer />
     </div>
   );
 };

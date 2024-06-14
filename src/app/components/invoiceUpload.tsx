@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import styles from '../styles/invoiceUpload.module.css';
 import categories from '../utils/categories';
 import { createInvoice } from '../services/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const InvoiceUpload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -18,12 +20,12 @@ const InvoiceUpload: React.FC = () => {
 
   const handleSubmit = () => {
     if (!file) {
-      alert('Por favor, seleccione un archivo');
+      toast.error('Por favor, seleccione un archivo');
       return;
     }
     
     if (!amount || !category) {
-      alert('Por favor, complete todos los campos');
+      toast.error('Por favor, complete todos los campos');
       return;
     }
 
@@ -39,11 +41,17 @@ const InvoiceUpload: React.FC = () => {
           Category: category,
           Content: base64Data || ''
         });
-        alert('Factura cargada exitosamente');
-        // Aquí puedes redirigir al usuario a otra página o realizar otras acciones
-      } catch (error) {
+        toast.success('Factura cargada exitosamente');
+        setTimeout(() => {
+          // window.location.href = '/home';
+        }, 3000);
+      } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+          toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+        } else {
+          toast.error('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde.');
+        }
         console.error('Error al cargar la factura:', error);
-        alert('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde');
       }
     };
     fileReader.readAsDataURL(file);
@@ -73,9 +81,9 @@ const InvoiceUpload: React.FC = () => {
           className={styles.select}
         >
           <option value="">Seleccione una categoria</option>
-        {categories.map((category, index) => (
-          <option key={index} value={category}>{category}</option>
-        ))}
+          {categories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
         </select>
       </div>
       <div className={styles.formGroup}>
@@ -88,6 +96,7 @@ const InvoiceUpload: React.FC = () => {
         />
       </div>
       <button onClick={handleSubmit} className={styles.submitButton}>Cargar Factura</button>
+      <ToastContainer />
     </div>
   );
 };

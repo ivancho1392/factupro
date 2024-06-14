@@ -11,10 +11,15 @@ import 'react-toastify/dist/ReactToastify.css';
 const HomePage: React.FC = () => {
 
   const handleLogin = (email: string, password: string) => {
-    console.log("email: ", email);
-    console.log("password: ", password);
     login(email, password)
       .then((response) => {
+        const { idToken, accessToken, refreshToken } = response;
+
+        // Almacenar los tokens en localStorage
+        localStorage.setItem('idToken', idToken);
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+        
         toast.success('Acceso exitoso.');
         setTimeout(() => {
           window.location.href = '/home';

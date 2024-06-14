@@ -15,7 +15,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [confirmEmail, setConfirmEmail] = useState('');
   const [error, setError] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
