@@ -24,7 +24,15 @@ export const login = (email: string, password: string): Promise<any> => {
 
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (result) => {
-        resolve(result);
+        const idToken = result.getIdToken().getJwtToken();
+        const accessToken = result.getAccessToken().getJwtToken();
+        const refreshToken = result.getRefreshToken().getToken();
+
+        resolve({
+          idToken,
+          accessToken,
+          refreshToken
+      });
       },
       onFailure: (err) => {
         reject(err);
