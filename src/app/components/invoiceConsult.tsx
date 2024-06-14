@@ -3,7 +3,7 @@ import styles from "../styles/invoiceConsult.module.css";
 import months from "../utils/months";
 import categories from "../utils/categories";
 import { jsPDF } from "jspdf";
-import { getInvoices } from "../services/api";
+import { getInvoices, deleteInvoice } from "../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -38,6 +38,8 @@ const InvoiceConsult: React.FC = () => {
     }>
   >([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
+  const [fileKeyToDelete, setFileKeyToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     const calculateTotalAmount = () => {
@@ -171,14 +173,39 @@ const InvoiceConsult: React.FC = () => {
     console.log("Actualizar factura con ID:", id);
   };
 
-  const handleDelete = (id: string) => {
-    // Lógica para eliminar la factura con el ID proporcionado
-    console.log("Eliminar factura con ID:", id);
+  const handleDelete = (id: string, fileKey: string) => {
+    setInvoiceToDelete(id);
+    setFileKeyToDelete(fileKey);
     context.openModal();
   };
 
+  const confirmDelete = async () => {
+    if (invoiceToDelete && fileKeyToDelete) {
+      context.openLoading();
+      try {
+        await deleteInvoice(invoiceToDelete, fileKeyToDelete);
+        // Elimina la factura de la lista local después de la eliminación exitosa
+        setFilteredInvoices(filteredInvoices.filter(invoice => invoice.id !== invoiceToDelete));
+        toast.success('Factura eliminada exitosamente.');
+      } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+          toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 3000);
+        } else {
+          toast.error('Error al eliminar factura. Por favor, inténtelo de nuevo más tarde.');
+        }
+      } finally {
+        context.closeLoading();
+        setInvoiceToDelete(null);
+        setFileKeyToDelete(null);
+        context.closeModal();
+      }
+    }
+  };
+
   const handleView = (id: string) => {
-    // Lógica para eliminar la factura con el ID proporcionado
     console.log("Ver factura con ID:", id);
     context.openModal();
   };
@@ -249,7 +276,7 @@ const InvoiceConsult: React.FC = () => {
                   />
                   <AiTwotoneDelete
                     className={styles.deleteButton}
-                    onClick={() => handleDelete(invoice.id)}
+                    onClick={() => handleDelete(invoice.id, invoice.imageUrl)}
                   />
                 </div>
               </div>
@@ -270,6 +297,30 @@ const InvoiceConsult: React.FC = () => {
       >
         Generar Reporte
       </button>
+
+      {/*Modal de confimacion de eliminacion */}
+      <div className={context.modal ? styles.modalopen : styles.modalclose}>
+      {context.modal && (
+        <div className={styles.modalContent}>
+          <h2 className="text-2xl font-bold">Confirmación</h2>
+          <p className="mt-4">
+            ¿Estas seguro de que quieres eliminar esta factura?
+          </p>
+          <button
+            onClick={confirmDelete}
+            className="mt-4 p-2 bg-custom-red mr-8 text-white rounded hover:bg-gray-700 transition duration-300"
+          >
+            Eliminar
+          </button>
+          <button
+            onClick={context.closeModal}
+            className="mt-4 p-2 bg-gray-500 text-white rounded hover:bg-gray-700 transition duration-300"
+          >
+            Volver
+          </button>
+        </div>
+      )}
+    </div>
       <ToastContainer />
     </div>
   );
