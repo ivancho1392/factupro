@@ -6,6 +6,11 @@ import { jsPDF } from "jspdf";
 import { getInvoices } from "../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  AiOutlinePicture,
+  AiOutlineEdit,
+  AiTwotoneDelete,
+} from "react-icons/ai";
 
 const InvoiceConsult: React.FC = () => {
   const [month, setMonth] = useState<string>("");
@@ -135,7 +140,7 @@ const InvoiceConsult: React.FC = () => {
 
     filteredInvoices.forEach((invoice) => {
       doc.text(
-        `ID: ${invoice.id} | Fecha: ${invoice.date} | Categoría: ${invoice.category} | Descripción: ${invoice.description} | Valor: ${invoice.value}`,
+        `Fecha: ${invoice.date} | Categoría: ${invoice.category} | Descripción: ${invoice.description} | Valor: ${invoice.value}`,
         10,
         y
       );
@@ -149,8 +154,19 @@ const InvoiceConsult: React.FC = () => {
     doc.save("reporte_facturas.pdf");
   };
 
+  const handleUpdate = (id: string) => {
+    // Lógica para actualizar la factura con el ID proporcionado
+    console.log("Actualizar factura con ID:", id);
+  };
+
+  const handleDelete = (id: string) => {
+    // Lógica para eliminar la factura con el ID proporcionado
+    console.log("Eliminar factura con ID:", id);
+  };
+
   return (
     <div className={styles.container}>
+      {/* Select para meses */}
       <select
         className={styles.selectMonth}
         value={month}
@@ -170,6 +186,7 @@ const InvoiceConsult: React.FC = () => {
         <option value="12">Diciembre</option>
       </select>
 
+      {/* Select para categorías */}
       <select
         className={styles.selectCategory}
         value={selectedCategory}
@@ -183,46 +200,51 @@ const InvoiceConsult: React.FC = () => {
         ))}
       </select>
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Categoría</th>
-            <th>Descripción</th>
-            <th>Valor</th>
-            <th>Link Imagen</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredInvoices.map((invoice) => (
-            <tr key={invoice.id}>
-              <td>{invoice.id}</td>
-              <td>{invoice.date}</td>
-              <td>{invoice.category}</td>
-              <td>{invoice.description}</td>
-              <td>{invoice.value}</td>
-              <td>
-                <a
-                  href={invoice.imageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Ver imagen
-                </a>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={4}>Total</td>
-            <td>{totalAmount}</td>
-            <td></td>
-          </tr>
-        </tfoot>
-      </table>
+      {/* Lista para mostrar facturas */}
+      <div className={styles.invoiceList}>
+        {filteredInvoices.map((invoice) => (
+          <div key={invoice.id} className={styles.invoiceItem}>
+            <div className={styles.invoiceDetails}>
+              <div>
+                <p>{invoice.date}</p>
+                <p>{invoice.description}</p>
+              </div>
+              <div>
+                <p className={styles.invoiceCategory}>{invoice.category}</p>
+              </div>
+            </div>
+            <div>
+              <div className={styles.invoiceDown}>
+                <p className={styles.invoiceValue}>
+                  ${invoice.value.toFixed(2)}
+                </p>
 
+                <div className={styles.invoiceButtons}>
+                  <AiOutlinePicture
+                    href={invoice.imageUrl}
+                    target="_blank"
+                    className={styles.viewButton}
+                  />
+                  <AiOutlineEdit
+                    className={styles.updateButton}
+                    onClick={() => handleUpdate(invoice.id)}
+                  />
+                  <AiTwotoneDelete
+                    className={styles.deleteButton}
+                    onClick={() => handleDelete(invoice.id)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.totalAmount}>
+        <p>Total: ${totalAmount.toFixed(2)}</p>
+      </div>
+
+      {/* Botón de generación de reporte */}
       <button
         className={styles.reportButton}
         onClick={generateReport}

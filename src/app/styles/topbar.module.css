@@ -1,28 +1,24 @@
 .topbar {
     display: flex;
-    justify-content: left;
-    padding: auto;
-    background-color: black;
+    justify-content: space-between;
     color: white;
     height: 48px;
-  }
-  
-  .buttonContainer {
-    display: flex;
-    gap: 16px;
+    width: 100%;
+    justify-items: center;
   }
   
   .button {
-    background-color: black;
+    --tw-bg-opacity: 1;
+    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+    border: 1px solid #ccc;
+    border-radius: 5px;
     color: white;
-    padding: 8px 16px;
     cursor: pointer;
-    flex: 1; 
     width: 300px;
     text-align: center;
   }
   
   .button:hover {
-    background-color: #333;
-    border-color: #ddd;
+    --tw-bg-opacity: 0.8;
+    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
   }
