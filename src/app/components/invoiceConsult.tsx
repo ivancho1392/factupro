@@ -25,6 +25,7 @@ const InvoiceConsult: React.FC = () => {
       description: string;
       value: number;
       imageUrl: string;
+      userName: string;
     }>
   >([]);
   const [filteredInvoices, setFilteredInvoices] = useState<
@@ -35,6 +36,7 @@ const InvoiceConsult: React.FC = () => {
       description: string;
       value: number;
       imageUrl: string;
+      userName: string;
     }>
   >([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -78,6 +80,7 @@ const InvoiceConsult: React.FC = () => {
               description: invoice.Description,
               value: invoice.Value,
               imageUrl: invoice.ImgLink,
+              userName: invoice.UserName,
             };
           });
           setInvoices(transformedData);
@@ -115,6 +118,7 @@ const InvoiceConsult: React.FC = () => {
       description: string;
       value: number;
       imageUrl: string;
+      userName: string;
     }>,
     category: string
   ) => {
@@ -264,7 +268,9 @@ const InvoiceConsult: React.FC = () => {
                 <p className={styles.invoiceValue}>
                   ${invoice.value.toFixed(2)}
                 </p>
-
+                <p className={styles.invoiceUser}>
+                  {invoice.userName}
+                </p>
                 <div className={styles.invoiceButtons}>
                   <AiOutlinePicture
                     className={styles.viewButton}
