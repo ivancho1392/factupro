@@ -2,23 +2,23 @@
 
 import Image from "next/image";
 import { useEffect, useState, useContext } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { getDecodedIdToken, getUserRoles } from "@/app/services/authService";
 import styles from "./styles.module.css";
-import { AiOutlineUser, AiOutlineCloseSquare } from 'react-icons/ai'; 
+import { AiOutlineUser, AiOutlineCloseSquare } from "react-icons/ai";
 import { AppContext } from "@/app/context";
 
 const Header = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userRoles, setUserRoles] = useState([]);
-  const router = useRouter(); 
+  const router = useRouter();
   const context = useContext(AppContext);
 
   useEffect(() => {
     getDecodedIdToken().then((decodedToken) => {
       setUserEmail(decodedToken.email);
     });
-  }, [ context.isAuthenticated ]);
+  }, [context.isAuthenticated]);
 
   useEffect(() => {
     getUserRoles().then((roles) => {
@@ -31,7 +31,11 @@ const Header = () => {
   };
 
   const handleLogoClick = () => {
-    router.push('/');
+    if (userEmail) {
+      router.push("/home");
+    } else {
+      router.push("/");
+    }
     context.closeAccountMenu();
   };
 
@@ -50,13 +54,21 @@ const Header = () => {
           />
         ) : (
           <>
-            <div className={styles.header_user_info} onClick={toggleAccountMenu}>
+            <div
+              className={styles.header_user_info}
+              onClick={toggleAccountMenu}
+            >
               <div>{userEmail ? `${userEmail}` : "Usuario no autenticado"}</div>
               <div>
-                {userRoles.length > 0 ? `${userRoles.join(", ")}` : "Cargando role..."}
+                {userRoles.length > 0
+                  ? `${userRoles.join(", ")}`
+                  : "Cargando role..."}
               </div>
             </div>
-            <AiOutlineUser className={styles.header_icon} onClick={toggleAccountMenu} />
+            <AiOutlineUser
+              className={styles.header_icon}
+              onClick={toggleAccountMenu}
+            />
           </>
         )}
       </div>
