@@ -1,18 +1,60 @@
 import React, { useState } from 'react';
 import styles from '../styles/invoiceUpload.module.css';
 import categories from '../utils/categories';
+import { createInvoice } from '../services/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const InvoiceUpload: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Lógica para manejar la carga de archivos
+    const selectedFile = event.target.files && event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
   };
 
   const handleSubmit = () => {
-    // Lógica para manejar la carga manual de facturas
+    if (!file) {
+      toast.error('Por favor, seleccione un archivo');
+      return;
+    }
+    
+    if (!amount || !category) {
+      toast.error('Por favor, complete todos los campos');
+      return;
+    }
+
+    const fileReader = new FileReader();
+    fileReader.onload = async () => {
+      const base64Data = fileReader.result?.toString().split(',')[1];
+      try {
+        await createInvoice({
+          UserName: 'Nombre de usuario',
+          Value: Number(amount),
+          Date: new Date().toISOString(),
+          Description: description,
+          Category: category,
+          Content: base64Data || ''
+        });
+        toast.success('Factura cargada exitosamente');
+        setTimeout(() => {
+          // window.location.href = '/home';
+        }, 3000);
+      } catch (error: any) {
+        if (error.message === 'Unauthorized') {
+          toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+        } else {
+          toast.error('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde.');
+        }
+        console.error('Error al cargar la factura:', error);
+      }
+    };
+    fileReader.readAsDataURL(file);
   };
 
   return (
@@ -39,9 +81,9 @@ const InvoiceUpload: React.FC = () => {
           className={styles.select}
         >
           <option value="">Seleccione una categoria</option>
-        {categories.map((category, index) => (
-          <option key={index} value={category}>{category}</option>
-        ))}
+          {categories.map((category, index) => (
+            <option key={index} value={category}>{category}</option>
+          ))}
         </select>
       </div>
       <div className={styles.formGroup}>
@@ -54,6 +96,7 @@ const InvoiceUpload: React.FC = () => {
         />
       </div>
       <button onClick={handleSubmit} className={styles.submitButton}>Cargar Factura</button>
+      <ToastContainer />
     </div>
   );
 };
