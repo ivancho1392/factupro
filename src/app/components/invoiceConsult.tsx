@@ -60,6 +60,7 @@ const InvoiceConsult: React.FC = () => {
   useEffect(() => {
     const fetchInvoices = async () => {
       if (month) {
+        context.openLoading();
         try {
           const data = await getInvoices(`2024-${month}`);
           const transformedData = data.map((invoice: any) => {
@@ -86,8 +87,10 @@ const InvoiceConsult: React.FC = () => {
               window.location.href = '/';
             }, 3000);
           } else {
-            toast.error('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde.');
+            toast.error('Error al consultar facturas. Por favor, inténtelo de nuevo más tarde.');
           }
+        } finally {
+          context.closeLoading();
         }
       }
     };

@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styles from '../styles/invoiceUpload.module.css';
 import categories from '../utils/categories';
 import { createInvoice } from '../services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AppContext } from '../context';
 
 const InvoiceUpload: React.FC = () => {
+  const context = useContext(AppContext);
   const [file, setFile] = useState<File | null>(null);
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
@@ -32,6 +34,7 @@ const InvoiceUpload: React.FC = () => {
     const fileReader = new FileReader();
     fileReader.onload = async () => {
       const base64Data = fileReader.result?.toString().split(',')[1];
+      context.openLoading();
       try {
         await createInvoice({
           UserName: 'Nombre de usuario',
@@ -55,6 +58,8 @@ const InvoiceUpload: React.FC = () => {
           toast.error('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde.');
         }
         console.error('Error al cargar la factura:', error);
+      } finally {
+        context.closeLoading();
       }
     };
     fileReader.readAsDataURL(file);

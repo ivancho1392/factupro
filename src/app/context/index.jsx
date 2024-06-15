@@ -7,6 +7,7 @@ export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
   const [confirmar, setConfirmar] = useState(false);
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const openModal = () => {
     setModal(true);
@@ -15,6 +16,12 @@ export const AppProvider = ({ children }) => {
     setModal(false);
   };
 
+  const openLoading = () => {
+    setLoading(true);
+  };
+  const closeLoading = () => {
+    setLoading(false);
+  };
   const openConfirmar = () => {
     setConfirmar(true);
   };
@@ -24,6 +31,10 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        loading,
+        setLoading,
+        openLoading,
+        closeLoading,
         confirmar,
         modal,
         openModal,
