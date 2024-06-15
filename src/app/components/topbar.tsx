@@ -18,7 +18,7 @@ const TopBar: React.FC<TopBarProps> = ({ setActiveComponent }) => {
         className={styles.button}
         onClick={() => setActiveComponent("upload")}
       >
-        Cargar una nueva factura
+        Subir Facturas
       </button>
     </div>
   );
