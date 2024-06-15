@@ -1,58 +1,124 @@
+/* Estilos generales del contenedor */
 .container {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-  }
-  
-  .selectMonth {
-    margin-bottom: 16px;
-    border: 1px solid #ddd;
-  }
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Arial', sans-serif;
+}
 
-  .selectCategory {
-    margin-bottom: 16px;
-    border: 1px solid #ddd;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 16px;
-  }
-  
-  .table th,
-  .table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  .filterButton {
-    background-color: black;
-    color: white;
-    padding: 8px 16px;
-    cursor: pointer;
-    border: 1px solid white;
-    margin-bottom: 16px;
-  }
-  
-  .filterButton:hover {
-    background-color: #333;
-    border-color: #ddd;
-  }
-  
-  .reportButton {
-    background-color: black;
-    width: 50%;
-    min-width: 200px;
-    max-width: 300px;
-    color: white;
-    padding: 8px 16px;
-    cursor: pointer;
-    border: 1px solid white;
-    align-self: flex-end;
-  }
-  
-  .reportButton:hover {
-    background-color: #333;
-    border-color: #ddd;
-  }
+/* Estilos de los selectores de mes y categoría */
+.selectMonth, .selectCategory {
+  margin-right: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Estilos de cada item de factura */
+.invoiceItem {
+  background: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+}
+
+/* Estilos para los detalles de la factura */
+.invoiceDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Estilos para los textos dentro de cada item */
+.invoiceDetails p {
+  margin: 5px 0;
+  font-size: 14px; /* Tamaño de letra pequeña */
+}
+
+.invoiceValue {
+  font-size: 18px; 
+  font-weight: bold;
+  margin: 4px;
+}
+
+/* Estilos para los botones e íconos */
+.deleteButton,
+.updateButton,
+.viewButton {
+  width: 20px; 
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out; 
+}
+
+.deleteButton {
+  color: #a70606e0;
+}
+
+.updateButton,
+.viewButton {
+  --tw-bg-opacity: 1;
+  color: rgb(57 71 57 / var(--tw-bg-opacity));
+}
+
+.deleteButton:hover,
+.updateButton:hover,
+.viewButton:hover {
+  transform: scale(1.2); 
+}
+
+
+/* Estilos de la lista de facturas */
+.invoiceList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 20px;
+  margin-top: 20px;
+}
+
+.totalAmount {
+  margin: 24px;
+  text-align: right;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Estilos del botón de generación de reporte */
+.reportButton {
+  margin-top: 20px;
+  padding: 10px 20px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+}
+
+.reportButton:hover {
+  --tw-bg-opacity: 0.7;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+}
+
+.invoiceButtons {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end; 
+  align-items: center;
+}
+
+.invoiceDown{
+  display: flex;
+  justify-content: space-between;
+}
+
+.invoiceCategory {
+  font-style: italic;
+}
