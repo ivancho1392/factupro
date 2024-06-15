@@ -8,6 +8,8 @@
   }
   
   .button {
+    margin: auto;
+    padding: 10px 20px;
     --tw-bg-opacity: 1;
     background-color: rgb(57 71 57 / var(--tw-bg-opacity));
     border: 1px solid #ccc;

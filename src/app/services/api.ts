@@ -51,12 +51,15 @@ export async function getInvoices(month?: string): Promise<any> {
   });
 
   if (!response.ok) {
-    throw new Error(`Error: ${response.status} ${response.statusText}`);
+    const errorData = await response.json();
+    if (response.status === 401) {
+      throw new Error('Unauthorized');
+    } else {
+      throw new Error(errorData.message || 'An error occurred');
+    }
   }
 
   const responseData = await response.json();
-
-  console.log('Response from Lambda:', responseData); // Imprimir en consola
 
   return responseData;
 }

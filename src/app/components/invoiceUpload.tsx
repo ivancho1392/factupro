@@ -43,11 +43,14 @@ const InvoiceUpload: React.FC = () => {
         });
         toast.success('Factura cargada exitosamente');
         setTimeout(() => {
-          // window.location.href = '/home';
+          window.location.href = '/home';
         }, 3000);
       } catch (error: any) {
         if (error.message === 'Unauthorized') {
           toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 3000);
         } else {
           toast.error('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde.');
         }

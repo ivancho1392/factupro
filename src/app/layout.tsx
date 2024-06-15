@@ -1,23 +1,21 @@
-import React from 'react';
-import './styles/globals.css';
-import styles from './styles/layout.module.css';
+import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
+import { AppProvider } from './context';
+import ModalMenu from './Modal';
+import './styles/globals.css';
+import Header from './components/Header';
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const montserrat = Montserrat({ subsets: ['latin'] });
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <Image src="/logo.png" alt="Company Logo" width={300} height={50} />
-            <h1>FactuPro - Gestiona tu factura</h1>
-          </div>
-          <main className={styles.main}>{children}</main>
-        </div>
+      <body className={montserrat.className}>
+        <AppProvider>
+          <ModalMenu />
+          <Header />
+          <main className="mt-[90px]">{children}</main>
+        </AppProvider>
       </body>
     </html>
   );

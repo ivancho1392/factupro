@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "../styles/invoiceConsult.module.css";
 import months from "../utils/months";
 import categories from "../utils/categories";
@@ -11,8 +11,10 @@ import {
   AiOutlineEdit,
   AiTwotoneDelete,
 } from "react-icons/ai";
+import { AppContext } from "../context";
 
 const InvoiceConsult: React.FC = () => {
+  const context = useContext(AppContext);
   const [month, setMonth] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [invoices, setInvoices] = useState<
@@ -46,6 +48,8 @@ const InvoiceConsult: React.FC = () => {
       setTotalAmount(total);
     };
     calculateTotalAmount();
+
+
   }, [filteredInvoices]);
 
   const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -75,10 +79,15 @@ const InvoiceConsult: React.FC = () => {
           });
           setInvoices(transformedData);
           filterInvoices(transformedData, selectedCategory);
-          console.log(transformedData); // Aquí se imprimirá la respuesta transformada
-          console.log("month:", month);
-        } catch (error) {
-          console.error("Error fetching invoices:", error);
+        } catch (error: any) {
+          if (error.message === 'Unauthorized') {
+            toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 3000);
+          } else {
+            toast.error('Error al cargar la factura. Por favor, inténtelo de nuevo más tarde.');
+          }
         }
       }
     };
@@ -162,6 +171,13 @@ const InvoiceConsult: React.FC = () => {
   const handleDelete = (id: string) => {
     // Lógica para eliminar la factura con el ID proporcionado
     console.log("Eliminar factura con ID:", id);
+    context.openModal();
+  };
+
+  const handleView = (id: string) => {
+    // Lógica para eliminar la factura con el ID proporcionado
+    console.log("Ver factura con ID:", id);
+    context.openModal();
   };
 
   return (
@@ -221,9 +237,8 @@ const InvoiceConsult: React.FC = () => {
 
                 <div className={styles.invoiceButtons}>
                   <AiOutlinePicture
-                    href={invoice.imageUrl}
-                    target="_blank"
                     className={styles.viewButton}
+                    onClick={() => handleView(invoice.id)}
                   />
                   <AiOutlineEdit
                     className={styles.updateButton}
