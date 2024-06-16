@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
 import styles from './styles/page.module.css';
 import AuthForm from './components/AuthForm';
@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
     login(email, password)
       .then((response) => {
         const { idToken, accessToken, refreshToken } = response;
-
+        
         // Almacenar los tokens en localStorage
         localStorage.setItem('idToken', idToken);
         localStorage.setItem('accessToken', accessToken);

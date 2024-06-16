@@ -1,4 +1,11 @@
 import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from 'amazon-cognito-identity-js';
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedIdToken {
+  email?: string;
+  'cognito:username'?: string;
+  'cognito:groups'?: string[];
+}
 
 // Reemplaza estos valores con los de tu User Pool
 const poolData = {
@@ -7,6 +14,10 @@ const poolData = {
 };
 
 const userPool = new CognitoUserPool(poolData);
+
+export const getCurrentUser = () => {
+  return userPool.getCurrentUser();
+};
 
 export const login = (email: string, password: string): Promise<any> => {
   return new Promise((resolve, reject) => {
@@ -76,5 +87,46 @@ export const confirmSignUp = (email: string, verificationCode: string): Promise<
         resolve(result);
       }
     });
+  });
+};
+
+export const getDecodedIdToken = (): Promise<DecodedIdToken> => {
+  const user = getCurrentUser();
+  if (user) {
+    return new Promise((resolve, reject) => {
+      user.getSession((err: any, session: any) => {
+        if (err) {
+          reject(err);
+        } else if (session.isValid()) {
+          const idToken = session.getIdToken().getJwtToken();
+          const decodedToken = jwtDecode<DecodedIdToken>(idToken);
+          resolve(decodedToken);
+        } else {
+          reject('Session is invalid');
+        }
+      });
+    });
+  } else {
+    return Promise.reject('No current user');
+  }
+};
+
+
+export const getUserRoles = (): Promise<string[]> => {
+  return getDecodedIdToken()
+    .then((decodedToken: DecodedIdToken) => {
+      return decodedToken['cognito:groups'] || [];
+    });
+};
+
+export const logout = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const user = getCurrentUser();
+    if (user) {
+      user.signOut();
+      resolve();
+    } else {
+      resolve();
+    }
   });
 };
