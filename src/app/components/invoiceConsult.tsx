@@ -185,6 +185,7 @@ const InvoiceConsult: React.FC = () => {
 
   const confirmDelete = async () => {
     if (invoiceToDelete && fileKeyToDelete) {
+      context.closeModal();
       context.openLoading();
       try {
         await deleteInvoice(invoiceToDelete, fileKeyToDelete);
@@ -204,14 +205,12 @@ const InvoiceConsult: React.FC = () => {
         context.closeLoading();
         setInvoiceToDelete(null);
         setFileKeyToDelete(null);
-        context.closeModal();
       }
     }
   };
 
-  const handleView = (id: string) => {
-    console.log("Ver factura con ID:", id);
-    context.openModal();
+  const handleView = (imageUrl: string) => {
+    window.open(imageUrl, "_blank");
   };
 
   return (
@@ -274,7 +273,7 @@ const InvoiceConsult: React.FC = () => {
                 <div className={styles.invoiceButtons}>
                   <AiOutlinePicture
                     className={styles.viewButton}
-                    onClick={() => handleView(invoice.id)}
+                    onClick={() => handleView(invoice.imageUrl)}
                   />
                   <AiOutlineEdit
                     className={styles.updateButton}
