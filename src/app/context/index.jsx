@@ -8,6 +8,7 @@ export const AppProvider = ({ children }) => {
   const [confirmar, setConfirmar] = useState(false);
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [menuAccount, setMenuAccount] = useState(false);
 
   const openModal = () => {
     setModal(true);
@@ -28,9 +29,21 @@ export const AppProvider = ({ children }) => {
   const closeConfirmar = () => {
     setConfirmar(false);
   };
+
+  const toggleAccountMenu = () => {
+    setMenuAccount(!menuAccount);
+  };
+
+  const closeAccountMenu = () => {
+    setMenuAccount(false);
+  };
+
   return (
     <AppContext.Provider
       value={{
+        menuAccount,
+        toggleAccountMenu,
+        closeAccountMenu,
         loading,
         setLoading,
         openLoading,
