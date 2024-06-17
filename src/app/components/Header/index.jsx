@@ -23,6 +23,7 @@ const Header = () => {
   useEffect(() => {
     getUserRoles().then((roles) => {
       setUserRoles(roles);
+      context.setRole(roles[0]);
     });
   }, []);
 

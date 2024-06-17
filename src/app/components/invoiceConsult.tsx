@@ -291,11 +291,11 @@ const InvoiceConsult: React.FC = () => {
                     onClick={() => handleView(invoice.imageUrl)}
                   />
                   <AiOutlineEdit
-                    className={styles.updateButton}
+                    className={context.role === 'Admin' ? styles.updateButton : styles.noViewButton}
                     onClick={() => handleUpdate(invoice.id)}
                   />
                   <AiTwotoneDelete
-                    className={styles.deleteButton}
+                    className={context.role === 'Admin' ? styles.deleteButton : styles.noViewButton}
                     onClick={() => handleDelete(invoice.id, invoice.imageUrl)}
                   />
                 </div>

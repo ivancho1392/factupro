@@ -9,11 +9,14 @@ import { AiOutlineTeam } from "react-icons/ai";
 import { AppContext } from "../../context/index";
 import { logout } from "@/app/services/authService";
 
+
 const Menu = () => {
-  const { menuAccount, closeAccountMenu } = useContext(AppContext);
+  const { menuAccount, closeAccountMenu} = useContext(AppContext);
+  const context = useContext(AppContext);
 
   const handleLogout = async () => {
     await logout();
+    context.setRole(null);
     window.location.reload();
     window.location.href = "/";
     closeAccountMenu();  
