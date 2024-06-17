@@ -34,7 +34,11 @@ const Home: React.FC = () => {
           {activeComponent === 'upload' && context.role === 'Admin' && <InvoiceUpload />}
           {activeComponent === 'consult' && context.role === 'Externo' && <InvoiceConsult />}
           {activeComponent === 'upload' && context.role === 'Externo' && <>
-          <p>Función no permitida para este Role.</p></>}
+            <p>Función no permitida para este Role.</p></>}
+          {activeComponent === 'upload' && !context.role && <>
+            <p>Usuario sin Role, comuniquese con el administrador por favor.</p></>}
+          {activeComponent === 'consult' && !context.role && <>
+            <p>Usuario sin Role, comuniquese con el administrador por favor.</p></>}
         </div>
         <div className="w-full lg:w-[30%]">
           <h1>Segunda área de detalle</h1>
