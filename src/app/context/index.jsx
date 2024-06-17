@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [menuAccount, setMenuAccount] = useState(false);
+  const [role, setRole] = useState(null);
 
   const openModal = () => {
     setModal(true);
@@ -54,6 +55,8 @@ export const AppProvider = ({ children }) => {
         closeModal,
         openConfirmar,
         closeConfirmar,
+        role,
+        setRole
       }}
     >
       {children}

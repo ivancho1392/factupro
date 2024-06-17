@@ -9,7 +9,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const HomePage: React.FC = () => {
-
   const handleLogin = (email: string, password: string) => {
     login(email, password)
       .then((response) => {
