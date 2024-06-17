@@ -31,6 +31,12 @@ const InvoiceUpload: React.FC = () => {
       return;
     }
 
+    const numericAmount = parseFloat(amount.replace(',', '.'));
+    if (isNaN(numericAmount)) {
+      toast.error('Por favor, ingrese un valor numérico válido');
+      return;
+    }
+
     const fileReader = new FileReader();
     fileReader.onload = async () => {
       const base64Data = fileReader.result?.toString().split(',')[1];
@@ -38,7 +44,7 @@ const InvoiceUpload: React.FC = () => {
       try {
         await createInvoice({
           UserName: 'Nombre de usuario',
-          Value: Number(amount),
+          Value: numericAmount,
           Date: new Date().toISOString(),
           Description: description,
           Category: category,
@@ -77,7 +83,7 @@ const InvoiceUpload: React.FC = () => {
         <input
           type="text"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => setAmount(e.target.value.replace(',', '.'))}
           className={styles.input}
         />
       </div>
