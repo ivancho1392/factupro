@@ -52,8 +52,6 @@ const InvoiceConsult: React.FC = () => {
       setTotalAmount(total);
     };
     calculateTotalAmount();
-
-
   }, [filteredInvoices]);
 
   const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -213,10 +211,27 @@ const InvoiceConsult: React.FC = () => {
     window.open(imageUrl, "_blank");
   };
 
+  // Función para deshabilitar los meses posteriores al mes actual
+  const disableFutureMonths = () => {
+    const currentMonth = new Date().getMonth() + 1; // Obtiene el mes actual (1-12)
+    const selectElement = document.getElementById('monthSelect') as HTMLSelectElement;
+    for (let i = 0; i < selectElement.options.length; i++) {
+      if (parseInt(selectElement.options[i].value) > currentMonth) {
+        selectElement.options[i].disabled = true;
+      }
+    }
+  };
+
+  // Llama a disableFutureMonths cuando el componente se monte
+  useEffect(() => {
+    disableFutureMonths();
+  }, []);
+
   return (
     <div className={styles.container}>
       {/* Select para meses */}
       <select
+        id="monthSelect"
         className={styles.selectMonth}
         value={month}
         onChange={handleMonthChange}
