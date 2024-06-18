@@ -7,9 +7,12 @@ import AuthForm from './components/AuthForm';
 import { login } from './services/authService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AppContext } from './context';
 
 const HomePage: React.FC = () => {
+  const context = useContext(AppContext);
   const handleLogin = (email: string, password: string) => {
+    context.openLoading();
     login(email, password)
       .then((response) => {
         const { idToken, accessToken, refreshToken } = response;
@@ -20,6 +23,7 @@ const HomePage: React.FC = () => {
         localStorage.setItem('refreshToken', refreshToken);
         
         toast.success('Acceso exitoso.');
+        context.closeLoading();
         setTimeout(() => {
           window.location.href = '/home';
         }, 1500);
