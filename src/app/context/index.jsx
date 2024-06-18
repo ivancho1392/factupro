@@ -10,6 +10,8 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [menuAccount, setMenuAccount] = useState(false);
   const [role, setRole] = useState(null);
+  const [invoiceDataByMonth, setInvoiceDataByMonth] = useState({});
+  const [currentMonth, setCurrentMonth] = useState("");
 
   const openModal = () => {
     setModal(true);
@@ -39,6 +41,13 @@ export const AppProvider = ({ children }) => {
     setMenuAccount(false);
   };
 
+  const updateInvoiceDataByMonth = (month, data) => {
+    setInvoiceDataByMonth((prevState) => ({
+      ...prevState,
+      [month]: data,
+    }));
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -56,7 +65,11 @@ export const AppProvider = ({ children }) => {
         openConfirmar,
         closeConfirmar,
         role,
-        setRole
+        setRole,
+        invoiceDataByMonth,
+        updateInvoiceDataByMonth,
+        currentMonth,
+        setCurrentMonth,
       }}
     >
       {children}
