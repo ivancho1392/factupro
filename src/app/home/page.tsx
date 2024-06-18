@@ -34,7 +34,7 @@ const Home: React.FC = () => {
     labels: Object.keys(currentMonthData),
     datasets: [
       {
-        label: "# de votos",
+        label: "$USD",
         data: Object.values(currentMonthData),
         backgroundColor: chartColors,
         hoverBackgroundColor: chartColors,
