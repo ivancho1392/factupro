@@ -28,10 +28,6 @@ const Menu = () => {
       <div className={menuAccount ? styles.menuopen : styles.menuclose}>
         {menuAccount && (
           <>
-            <Link href="/verifySignUp" onClick={closeAccountMenu} className={styles.menuitem}>
-              <div className={styles.icon}><HiOutlineWrench /></div>
-              <div className={styles.name}>Confirmar cuenta</div>
-            </Link>
             <div onClick={handleLogout} className={styles.menuitem}>
               <div className={styles.icon}><HiOutlinePhoto /></div>
               <div className={styles.name}>Cerrar sesión</div>
@@ -39,6 +35,10 @@ const Menu = () => {
             <Link href="#contact" onClick={closeAccountMenu} className={styles.menuitem}>
               <div className={styles.icon}><GrWaypoint /></div>
               <div className={styles.name}>Contacto</div>
+            </Link>
+            <Link href="/verifySignUp" onClick={closeAccountMenu} className={styles.menuitem}>
+              <div className={styles.icon}><HiOutlineWrench /></div>
+              <div className={styles.name}>Confirmar cuenta</div>
             </Link>
             <div className={styles.divider}></div>
             <Link href="https://techverticalsa.com" onClick={closeAccountMenu} className={`${styles.menuitem} ${styles.techvertical}`}>
