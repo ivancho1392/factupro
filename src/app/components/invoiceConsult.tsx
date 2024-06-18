@@ -83,6 +83,15 @@ const InvoiceConsult: React.FC = () => {
           });
           setInvoices(transformedData);
           filterInvoices(transformedData, selectedCategory);
+
+          // Agrupar y sumar los valores por categoría
+          const invoiceDataByCategory = transformedData.reduce((acc: any, curr: any) => {
+            acc[curr.category] = (acc[curr.category] || 0) + curr.value;
+            return acc;
+          }, {});
+          context.updateInvoiceDataByMonth(month, invoiceDataByCategory);
+          context.setCurrentMonth(month);
+          console.log("actual month:", context.currentMonth);
         } catch (error: any) {
           if (error.message === 'Unauthorized') {
             toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
@@ -142,7 +151,8 @@ const InvoiceConsult: React.FC = () => {
 
     let reportTitle = "Reporte de Facturas";
     if (month !== "") {
-      reportTitle += ` mes ${months.find((m) => m.value === month)?.label}`;
+      // reportTitle += ` mes ${months.find((m) => m.value === month)?.label}`;
+      reportTitle += ` mes ${month}`;
     }
     if (selectedCategory !== "") {
       reportTitle += ` categoría ${selectedCategory}`;
