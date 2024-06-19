@@ -7,10 +7,11 @@ const categories = [
     'Mantenimiento de vehículos',
     'Mantenimiento de equipos',
     'Servicios públicos',
-    'Alquiler de oficina',
+    'Alquiler de inmueble',
     'Servicios de limpieza',
     'Insumos de oficina',
     'Servicios de honorarios',
+    'Transporte',
     'Otros'
   ];
   
