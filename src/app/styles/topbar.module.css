@@ -1,26 +1,45 @@
 .topbar {
-    display: flex;
-    justify-content: space-between;
-    color: white;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  justify-items: center;
+}
 
-    justify-items: center;
-  }
-  
-  .button {
-    margin: auto;
-    --tw-bg-opacity: 1;
-    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    width: 200px;
-    height: 30px;
-    text-align: center;
-    font-size: 14px;
-  }
-  
-  .button:hover {
-    --tw-bg-opacity: 0.8;
-    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
-  }
+.button {
+  margin: auto;
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  width: 160px;
+  height: 24px;
+  text-align: center;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.button:hover {
+  --tw-bg-opacity: 0.8;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+}
+
+.active {
+  transform: scale(1.2);
+}
+
+.buttonContainer {
+  background-color: #fff;
+  padding: 10px;
+}
+
+.buttonContainerActive {
+  background-color:  #e3e3e3;
+  border-radius: 6px 6px 0 0;
+  width: 320px;
+}

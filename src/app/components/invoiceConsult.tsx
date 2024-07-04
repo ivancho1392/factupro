@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import styles from "../styles/invoiceConsult.module.css";
-import months from "../utils/months";
 import categories from "../utils/categories";
 import { jsPDF } from "jspdf";
 import { getInvoices, deleteInvoice } from "../services/api";
@@ -81,11 +80,19 @@ const InvoiceConsult: React.FC = () => {
               userName: invoice.UserName,
             };
           });
-          setInvoices(transformedData);
-          filterInvoices(transformedData, selectedCategory);
+
+          // Ordenar las facturas por fecha
+          const sortedData = transformedData.sort((a: { date: string; }, b: { date: string; }) => {
+            const dateA = new Date(a.date.split('/').reverse().join('/'));
+            const dateB = new Date(b.date.split('/').reverse().join('/'));
+            return dateA.getTime() - dateB.getTime();
+          });
+
+          setInvoices(sortedData);
+          filterInvoices(sortedData, selectedCategory);
 
           // Agrupar y sumar los valores por categoría
-          const invoiceDataByCategory = transformedData.reduce((acc: any, curr: any) => {
+          const invoiceDataByCategory = sortedData.reduce((acc: any, curr: any) => {
             acc[curr.category] = (acc[curr.category] || 0) + curr.value;
             return acc;
           }, {});
@@ -151,7 +158,6 @@ const InvoiceConsult: React.FC = () => {
 
     let reportTitle = "Reporte de Facturas";
     if (month !== "") {
-      // reportTitle += ` mes ${months.find((m) => m.value === month)?.label}`;
       reportTitle += ` mes ${month}`;
     }
     if (selectedCategory !== "") {
