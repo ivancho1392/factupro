@@ -30,6 +30,7 @@ const HomePage: React.FC = () => {
       })
       .catch((error) => {
         toast.error('Acceso fallido. Por favor, intenta de nuevo.');
+        context.closeLoading();
       });
   };
 
