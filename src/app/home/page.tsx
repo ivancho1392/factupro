@@ -9,7 +9,8 @@ import { AppContext } from "../context/index";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { chartColors } from "./colors";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -78,7 +79,7 @@ const Home: React.FC = () => {
             }
           >
             Subir Facturas{" "}
-            {activeComponent === "upload" ? <FaChevronUp /> : <FaChevronDown />}
+            {activeComponent === "upload" ? <IoCloseSharp /> : <FaChevronDown />}
           </button>
         </div>
         <div
@@ -98,7 +99,7 @@ const Home: React.FC = () => {
           >
             Consultar Facturas{" "}
             {activeComponent === "consult" ? (
-              <FaChevronUp />
+              <IoCloseSharp />
             ) : (
               <FaChevronDown />
             )}
