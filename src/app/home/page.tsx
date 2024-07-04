@@ -142,7 +142,7 @@ const Home: React.FC = () => {
           </h2>
           {isEmptyData ? (
             <p className="text-center">
-              No tienes facturas registradas para este mes
+              No tienes facturas registradas para el mes seleccionado
             </p>
           ) : (
             <Pie data={data} />
