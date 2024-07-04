@@ -54,3 +54,57 @@
   background-color: rgb(57 71 57 / var(--tw-bg-opacity));
   border-color: #ddd;
 }
+
+.stepContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.step {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.step h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color:rgb(57, 71, 57);
+}
+
+.stepDescription {
+  font-size: 1rem;
+  color: #555;
+}
+
+.inputfile {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 16px;
+
+  .selectButton {
+    background-color: rgb(57, 71, 57);
+    color: white;
+    padding: 8px 16px;
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 5px;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fileDescription {
+    padding: 8px 0;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+  }
+}
