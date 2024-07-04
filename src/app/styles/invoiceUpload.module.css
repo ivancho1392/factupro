@@ -1,53 +1,56 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-  }
-  
-  .uploadButton {
-    --tw-bg-opacity: 1;
-    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
-    color: white;
-    padding: 8px 16px;
-    cursor: pointer;
-    border: 1px solid white;
-    margin-bottom: 16px;
-    border-radius: 5px;
-  }
-  
-  .uploadButton:hover {
-    --tw-bg-opacity: 0.7;
-    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
-    border-color: #ddd;
-  }
-  
-  .formGroup {
-    margin-bottom: 16px;
-  }
-  
-  .input,
-  .select {
-    border: 1px solid #ddd;
-    padding: 8px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .submitButton {
-    --tw-bg-opacity: 1;
-    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
-    color: white;
-    width: 50%;
-    min-width: 200px;
-    max-width: 300px;
-    align-self: flex-end;
-    padding: 8px 16px;
-    cursor: pointer;
-    border: 1px solid white;
-  }
-  
-  .submitButton:hover {
-    --tw-bg-opacity: 0.7;
-    background-color: rgb(57 71 57 / var(--tw-bg-opacity));
-    border-color: #ddd;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  background-color: #e3e3e3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+.uploadButton {
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid white;
+  margin-bottom: 16px;
+  border-radius: 5px;
+}
+
+.uploadButton:hover {
+  --tw-bg-opacity: 0.7;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  border-color: #ddd;
+}
+
+.formGroup {
+  margin-bottom: 16px;
+}
+
+.input,
+.select {
+  border: 1px solid #ddd;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.submitButton {
+  --tw-bg-opacity: 1;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  color: white;
+  width: 50%;
+  min-width: 200px;
+  max-width: 300px;
+  align-self: flex-end;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid white;
+}
+
+.submitButton:hover {
+  --tw-bg-opacity: 0.7;
+  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  border-color: #ddd;
+}
