@@ -5,14 +5,16 @@ import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { getDecodedIdToken, getUserRoles } from "@/app/services/authService";
 import styles from "./styles.module.css";
-import { AiOutlineUser, AiOutlineCloseSquare } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineCloseSquare, AiOutlineMenu } from "react-icons/ai";
 import { AppContext } from "@/app/context";
+import { MenuVisibilityContext } from "../../home/page";
 
 const Header = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userRoles, setUserRoles] = useState([]);
   const router = useRouter();
   const context = useContext(AppContext);
+  const { toggleMenu } = useContext(MenuVisibilityContext);
 
   useEffect(() => {
     getDecodedIdToken().then((decodedToken) => {
@@ -46,32 +48,20 @@ const Header = () => {
         <Image src="/logo.png" alt="Company Logo" width={180} height={50} />
       </div>
       <div className={styles.header_bottom}>
+        {/* Botón de menú, solo visible en mobile */}
+        <AiOutlineMenu size={30} onClick={toggleMenu} className={styles.menuButton} />
         <h1 className={styles.header_title}>FactuPro - Gestiona tu factura</h1>
-        {context.menuAccount ? (
-          <AiOutlineCloseSquare
-            size={30}
-            onClick={toggleAccountMenu}
-            className="cursor-pointer"
-          />
-        ) : (
-          <>
-            <div
-              className={styles.header_user_info}
-              onClick={toggleAccountMenu}
-            >
-              <div>{userEmail ? `${userEmail}` : "Usuario no autenticado"}</div>
-              <div>
-                {userRoles.length > 0
-                  ? `${userRoles.join(", ")}`
-                  : "Cargando role..."}
-              </div>
+        <div className={styles.header_user_section}>
+          {context.menuAccount ? (
+            <AiOutlineCloseSquare size={30} onClick={toggleAccountMenu} className="cursor-pointer" />
+          ) : (
+            <div className={styles.header_user_info} onClick={toggleAccountMenu}>
+              <div>{userEmail || "Usuario no autenticado"}</div>
+              <div>{userRoles.length > 0 ? userRoles.join(", ") : "Cargando role..."}</div>
             </div>
-            <AiOutlineUser
-              className={styles.header_icon}
-              onClick={toggleAccountMenu}
-            />
-          </>
-        )}
+          )}
+          <AiOutlineUser size={30} className={styles.header_icon} onClick={toggleAccountMenu} />
+        </div>
       </div>
     </header>
   );
