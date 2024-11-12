@@ -40,7 +40,8 @@
   }
 }
 
-.button {
+.buttonSide {
+  background-color: black;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -51,7 +52,7 @@
   font-size: 1rem;
 }
 
-.button.active {
+.buttonSide.active {
   background-color: #6A7C8C;
   border-radius: 8px;
 }

@@ -155,40 +155,31 @@
 // export default Home;
 
 // src/app/home/page.tsx
-
 "use client";
-import React, { useState, useContext, createContext } from "react";
-import { AppContext } from "../context/index";
+import React, { useState, useContext } from "react";
 import Sidebar from "../components/Sidebar/Sidebar";
 import Header from "../components/Header/index";
 import DetailArea from "../components/DetailArea/DetailArea";
 import styles from "../styles/page.module.css";
-
-const MenuVisibilityContext = createContext({
-  menuVisible: false,
-  toggleMenu: () => {},
-});
+import { AppContext } from "../context/index";
+import { MenuVisibilityProvider } from "../context/menuVisibilityContext";
 
 const Home: React.FC = () => {
   const [activeComponent, setActiveComponent] = useState<"consult" | "upload" | null>(null);
-  const [menuVisible, setMenuVisible] = useState(true);
   const context = useContext(AppContext);
 
-  const toggleMenu = () => setMenuVisible(!menuVisible);
-
   return (
-    <MenuVisibilityContext.Provider value={{ menuVisible, toggleMenu }}>
-      <div className={styles.pageContainer}>
-        <Header />
-        <div className={styles.mainContent}>
-          <Sidebar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
+    <MenuVisibilityProvider> {/* Envuelve en el proveedor */}
+      <div className={styles.container}>
+        <Sidebar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
+        <div className={styles.content}>
+          <Header />
           <DetailArea activeComponent={activeComponent} context={context} />
         </div>
       </div>
-    </MenuVisibilityContext.Provider>
+    </MenuVisibilityProvider>
   );
 };
 
 export default Home;
-export { MenuVisibilityContext };
 
