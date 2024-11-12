@@ -60,6 +60,7 @@ export async function getInvoices(month?: string): Promise<any> {
   }
 
   const responseData = await response.json();
+  console.log(responseData);
 
   return responseData;
 }

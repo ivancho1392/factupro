@@ -11,6 +11,7 @@ import {
   AiTwotoneDelete,
 } from "react-icons/ai";
 import { AppContext } from "../context";
+import { parseISO, format } from "date-fns";
 
 const InvoiceConsult: React.FC = () => {
   const context = useContext(AppContext);
@@ -65,7 +66,7 @@ const InvoiceConsult: React.FC = () => {
         try {
           const data = await getInvoices(`2024-${month}`);
           const transformedData = data.map((invoice: any) => {
-            const date = new Date(invoice.Date);
+            const date = parseISO(invoice.Date);
             return {
               id: invoice.InvoiceId,
               date: date.toLocaleDateString("es-ES", {
@@ -83,8 +84,8 @@ const InvoiceConsult: React.FC = () => {
 
           // Ordenar las facturas por fecha
           const sortedData = transformedData.sort((a: { date: string; }, b: { date: string; }) => {
-            const dateA = new Date(a.date.split('/').reverse().join('/'));
-            const dateB = new Date(b.date.split('/').reverse().join('/'));
+            const dateA = parseISO(a.date.split('/').reverse().join('/'));
+            const dateB = parseISO(b.date.split('/').reverse().join('/'));
             return dateA.getTime() - dateB.getTime();
           });
 

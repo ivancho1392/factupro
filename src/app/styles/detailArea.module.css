@@ -1,0 +1,16 @@
+
+
+.detailArea {
+  width: 75%; /* En pantallas grandes ocupará el 75% */
+  padding: 1rem;
+  right: 0;
+  overflow-y: auto;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .detailArea {
+    width: 100%; /* En mobile, ocupa el 100% del ancho */
+    margin-left: 0; /* Asegura que no tenga margen izquierdo */
+  }
+}
