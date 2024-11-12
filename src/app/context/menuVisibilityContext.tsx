@@ -1,12 +1,21 @@
 // src/app/context/menuVisibilityContext.tsx
-import { createContext, useState } from "react";
+import { createContext, useState, ReactNode } from "react";
 
-const MenuVisibilityContext = createContext({
+interface MenuVisibilityContextProps {
+  menuVisible: boolean;
+  toggleMenu: () => void;
+}
+
+const MenuVisibilityContext = createContext<MenuVisibilityContextProps>({
   menuVisible: false,
   toggleMenu: () => {},
 });
 
-export const MenuVisibilityProvider = ({ children }) => {
+interface MenuVisibilityProviderProps {
+  children: ReactNode;
+}
+
+export const MenuVisibilityProvider: React.FC<MenuVisibilityProviderProps> = ({ children }) => {
   const [menuVisible, setMenuVisible] = useState(true);
 
   const toggleMenu = () => setMenuVisible(!menuVisible);
