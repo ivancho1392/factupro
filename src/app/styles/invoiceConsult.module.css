@@ -1,9 +1,9 @@
 /* Estilos generales del contenedor */
 .container {
-  padding: 20px;
+  padding: 8px;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0;
   font-family: 'Arial', sans-serif;
   background-color: #e3e3e3;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

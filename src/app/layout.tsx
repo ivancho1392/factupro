@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <LoadingModal />
           <Menu />
           <Header />
-          <main className="mt-[120px]">{children}</main>
+          <main className="mt-[100px]">{children}</main>
         </AppProvider>
         <Footer />
       </body>
