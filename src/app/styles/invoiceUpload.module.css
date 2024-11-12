@@ -8,8 +8,17 @@
 }
 
 .uploadButton {
-  --tw-bg-opacity: 1;
-  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  background-color: rgba(58, 74, 88, 1); 
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 1px solid white;
+  margin-bottom: 16px;
+  border-radius: 5px;
+}
+
+.selectButton{
+  background-color: rgba(58, 74, 88, 1); 
   color: white;
   padding: 8px 16px;
   cursor: pointer;
@@ -19,8 +28,7 @@
 }
 
 .uploadButton:hover {
-  --tw-bg-opacity: 0.7;
-  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  background-color: rgba(58, 74, 88, 0.8); 
   border-color: #ddd;
 }
 
@@ -37,8 +45,7 @@
 }
 
 .submitButton {
-  --tw-bg-opacity: 1;
-  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  background-color: rgba(58, 74, 88, 1); 
   color: white;
   width: 50%;
   min-width: 200px;
@@ -50,8 +57,7 @@
 }
 
 .submitButton:hover {
-  --tw-bg-opacity: 0.7;
-  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  background-color: rgba(58, 74, 88, 0.8); 
   border-color: #ddd;
 }
 
