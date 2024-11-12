@@ -7,7 +7,7 @@ import { getDecodedIdToken, getUserRoles } from "@/app/services/authService";
 import styles from "./styles.module.css";
 import { AiOutlineUser, AiOutlineCloseSquare, AiOutlineMenu } from "react-icons/ai";
 import { AppContext } from "@/app/context";
-import { MenuVisibilityContext } from "../../home/page";
+import MenuVisibilityContext from "@/app/context/menuVisibilityContext";
 
 const Header = () => {
   const [userEmail, setUserEmail] = useState("");
