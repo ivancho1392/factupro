@@ -84,7 +84,7 @@ const InvoiceUpload: React.FC = () => {
         <div className={styles.step}>
           <h3>Paso 1.</h3>
           <div className={styles.inputfile}>
-          <label htmlFor="fileInput" className={styles.selectButton}>
+          <label htmlFor="fileInput" className={styles.uploadButton}>
             Seleccionar factura
           </label>
           <input

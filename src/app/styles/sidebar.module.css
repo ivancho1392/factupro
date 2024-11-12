@@ -2,7 +2,7 @@
   width: 25%;
   height: 80vh;
   position: fixed;
-  margin-top: 86px;
+  margin-top: 100px;
   left: 0;
   margin-left: 16px;
   max-width: 300px;
@@ -13,7 +13,7 @@
   gap: 1rem;
   padding: 1rem;
   color: white;
-  background-color: rgba(58, 74, 88, 0.8); 
+  background-color: rgba(58, 74, 88, 1); 
   background-image: url("../../../public/sidebar.svg"); 
   background-size: 105%;
   background-blend-mode: multiply; 
@@ -32,6 +32,7 @@
     left: 0;
     top: 0;
     transform: translateX(-110%);
+    background-color: rgba(58, 74, 88, 1);
     transition: transform 0.3s ease;
   }
 
@@ -41,7 +42,6 @@
 }
 
 .buttonSide {
-  background-color: black;
   display: flex;
   align-items: center;
   justify-content: space-between;

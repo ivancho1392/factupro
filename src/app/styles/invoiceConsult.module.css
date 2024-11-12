@@ -94,8 +94,7 @@
 /* Estilos del botón de generación de reporte */
 .reportButton {
   margin-top: 20px;
-  --tw-bg-opacity: 1;
-  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  background-color: rgba(58, 74, 88, 1); 
   color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -107,7 +106,7 @@
 
 .reportButton:hover {
   --tw-bg-opacity: 0.7;
-  background-color: rgb(57 71 57 / var(--tw-bg-opacity));
+  background-color: rgba(58, 74, 88, 0.8); 
 }
 
 .invoiceButtons {
