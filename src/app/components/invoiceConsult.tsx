@@ -42,6 +42,7 @@ const InvoiceConsult: React.FC = () => {
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
   const [fileKeyToDelete, setFileKeyToDelete] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<string>("2024");
 
   useEffect(() => {
     const calculateTotalAmount = () => {
@@ -59,12 +60,18 @@ const InvoiceConsult: React.FC = () => {
     setMonth(selectedMonth);
   };
 
+  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedYear = event.target.value;
+    setSelectedYear(selectedYear);
+  };
+
   useEffect(() => {
     const fetchInvoices = async () => {
       if (month) {
         context.openLoading();
         try {
-          const data = await getInvoices(`2024-${month}`);
+          const data = await getInvoices(`${selectedYear}-${month}`);
+          // const data = await getInvoices(`2024-${month}`);
           const transformedData = data.map((invoice: any) => {
             const date = parseISO(invoice.Date);
             return {
@@ -115,7 +122,7 @@ const InvoiceConsult: React.FC = () => {
       }
     };
     fetchInvoices();
-  }, [month]);
+  }, [month, selectedYear, selectedCategory]);
 
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>
@@ -265,6 +272,17 @@ const InvoiceConsult: React.FC = () => {
         <option value="10">Octubre</option>
         <option value="11">Noviembre</option>
         <option value="12">Diciembre</option>
+      </select>
+
+      {/* Select para años */}
+      <select
+        id="yearSelect"
+        className={styles.selectYear}
+        value={selectedYear}
+        onChange={handleYearChange}
+      >
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
       </select>
 
       {/* Select para categorías */}
