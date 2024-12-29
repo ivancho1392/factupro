@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import styles from "../styles/invoiceUpload.module.css";
 import categories from "../utils/categories";
+import rates, { calculateTotal } from "../utils/rates";
 import { createInvoice } from "../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +16,7 @@ const InvoiceUpload: React.FC = () => {
   const [invoiceDate, setInvoiceDate] = useState<string>(
     new Date().toISOString().substr(0, 10)
   );
+  const [selectedRate, setSelectedRate] = useState<string>("");
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
@@ -35,23 +37,30 @@ const InvoiceUpload: React.FC = () => {
     }
 
     const numericAmount = parseFloat(amount.replace(",", "."));
+
     if (isNaN(numericAmount)) {
       toast.error("Por favor, ingrese un valor numérico válido");
       return;
     }
+
+    const totalAmount = calculateTotal(amount, selectedRate);
 
     const fileReader = new FileReader();
     fileReader.onload = async () => {
       const base64Data = fileReader.result?.toString().split(",")[1];
       context.openLoading();
       try {
+        console.log(
+          "Cargando factura:","Value:", totalAmount, "Subtotal:", amount, "ITBMS:", selectedRate);
         await createInvoice({
           UserName: "Nombre de usuario",
-          Value: numericAmount,
+          Value: totalAmount,
           Date: invoiceDate,
           Description: description,
           Category: category,
           Content: base64Data || "",
+          ITBMS: selectedRate,
+          Subtotal: amount,
         });
         toast.success("Factura cargada exitosamente");
         setTimeout(() => {
@@ -81,43 +90,67 @@ const InvoiceUpload: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.stepContainer}>
-        <div className={styles.step}>
+
+        {/* Paso 1 */}
+        <div className={styles.step}>	
           <h3>Paso 1.</h3>
           <div className={styles.inputfile}>
-          <label htmlFor="fileInput" className={styles.uploadButton}>
-            Seleccionar factura
-          </label>
-          <input
-            id="fileInput"
-            type="file"
-            onChange={handleFileUpload}
-            style={{ display: "none" }}
-          />
-          <p className={styles.fileDescription}>
-            {!file ? "Ninguna factura seleccionada" : file.name}
-          </p>
-        </div>
+            <label htmlFor="fileInput" className={styles.uploadButton}>
+              Seleccionar factura
+            </label>
+            <input
+              id="fileInput"
+              type="file"
+              onChange={handleFileUpload}
+              style={{ display: "none" }}
+            />
+            <p className={styles.fileDescription}>
+              {!file ? "No has seleccionado ninguna factura" : file.name}
+            </p>
+          </div>
           <p className={styles.stepDescription}>
             Selecciona la factura a cargar en el sistema. Puede ser una foto de
             tu galería, un PDF, o puedes cargar una foto con tu cámara.
           </p>
         </div>
+
+        {/* Paso 2 */}
         <div className={styles.step}>
           <h3>Paso 2.</h3>
           <div className={styles.formGroup}>
-            <label>Valor</label>
-            <input
-              type="text"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value.replace(",", "."))}
-              className={styles.input}
-            />
+            <div className={styles.item2}>
+              <label>Valor sin ITBMS</label>
+              <input
+                type="text"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value.replace(",", "."))}
+                className={styles.input}
+              />
+              <label>ITBMS</label>
+              <select
+                value={selectedRate ? selectedRate.valueOf() : ""}
+                onChange={(e) => setSelectedRate(e.target.value)}
+                className={styles.input}
+              >
+                {rates.map((rate, index) => (
+                  <option key={index} value={rate.value}>
+                    {rate.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={styles.item2}>
+              <h3>Total</h3>
+              <p>${calculateTotal(amount, selectedRate).toFixed(2)} </p>
+              </div>
           </div>
           <p className={styles.stepDescription}>
-            Asigna un valor a tu factura. Asegúrate de que corresponda al valor
-            real.
+            Asigna un valor sin itbms a tu factura, después discrimina el ITBMS,
+            Asegúrate de que corresponda al valor real.
           </p>
         </div>
+
+        {/* Paso 3 */}         
         <div className={styles.step}>
           <h3>Paso 3.</h3>
           <div className={styles.formGroup}>
@@ -139,6 +172,8 @@ const InvoiceUpload: React.FC = () => {
             Selecciona la categoria correspondiente a tu factura.
           </p>
         </div>
+
+        {/* Paso 4 */} 
         <div className={styles.step}>
           <h3>Paso 4. </h3>
           <div className={styles.formGroup}>
@@ -155,10 +190,12 @@ const InvoiceUpload: React.FC = () => {
             detallar cualquier información adicional relevante.
           </p>
         </div>
+
+        {/* Paso 5 */} 
         <div className={styles.step}>
           <h3>Paso 5.</h3>
           <div className={styles.formGroup}>
-          <label>Fecha de la factura</label>
+            <label>Fecha de la factura</label>
             <input
               type="date"
               value={invoiceDate}
@@ -167,11 +204,12 @@ const InvoiceUpload: React.FC = () => {
             />
           </div>
           <p className={styles.stepDescription}>
-          La factura llevará la fecha de hoy. Si es de otra fecha,
-          puedes modificarla según sea necesario.
+            La factura llevará la fecha de hoy. Si es de otra fecha, puedes
+            modificarla según sea necesario.
           </p>
         </div>
       </div>
+
       <button onClick={handleSubmit} className={styles.submitButton}>
         Cargar Factura
       </button>
