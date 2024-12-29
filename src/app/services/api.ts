@@ -5,6 +5,8 @@ interface InvoiceData {
   Description: string;
   Category: string;
   Content: string;
+  ITBMS: string;
+  Subtotal: string;
 }
 
 export async function createInvoice(data: InvoiceData): Promise<any> {
