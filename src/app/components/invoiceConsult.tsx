@@ -26,6 +26,8 @@ const InvoiceConsult: React.FC = () => {
       value: number;
       imageUrl: string;
       userName: string;
+      Subtotal?: string; 
+    ITBMS?: string;
     }>
   >([]);
   const [filteredInvoices, setFilteredInvoices] = useState<
@@ -37,9 +39,13 @@ const InvoiceConsult: React.FC = () => {
       value: number;
       imageUrl: string;
       userName: string;
+      Subtotal?: string;
+      ITBMS?: string;
     }>
   >([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [subTotalAmount, setSubTotalAmount] = useState<number>(0);
+  const [itbmsAmount, setItbmsAmount] = useState<number>(0);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
   const [fileKeyToDelete, setFileKeyToDelete] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string>("2024");
@@ -51,8 +57,15 @@ const InvoiceConsult: React.FC = () => {
         0
       );
       setTotalAmount(total);
+      const subTotal = filteredInvoices.reduce(
+        (accumulator, currentInvoice) => accumulator + (parseFloat(currentInvoice.Subtotal || "0") || 0),
+        0
+      );
+      setSubTotalAmount(subTotal);
+      setItbmsAmount(total - subTotal);
     };
     calculateTotalAmount();
+
   }, [filteredInvoices]);
 
   const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -86,35 +99,46 @@ const InvoiceConsult: React.FC = () => {
               value: invoice.Value,
               imageUrl: invoice.ImgLink,
               userName: invoice.UserName,
+              ITBMS: invoice.ITBMS || "--",
+              Subtotal: invoice.SubtotalS || "--",
             };
           });
 
           // Ordenar las facturas por fecha
-          const sortedData = transformedData.sort((a: { date: string; }, b: { date: string; }) => {
-            const dateA = parseISO(a.date.split('/').reverse().join('/'));
-            const dateB = parseISO(b.date.split('/').reverse().join('/'));
-            return dateA.getTime() - dateB.getTime();
-          });
+          const sortedData = transformedData.sort(
+            (a: { date: string }, b: { date: string }) => {
+              const dateA = parseISO(a.date.split("/").reverse().join("/"));
+              const dateB = parseISO(b.date.split("/").reverse().join("/"));
+              return dateA.getTime() - dateB.getTime();
+            }
+          );
 
           setInvoices(sortedData);
           filterInvoices(sortedData, selectedCategory);
 
           // Agrupar y sumar los valores por categoría
-          const invoiceDataByCategory = sortedData.reduce((acc: any, curr: any) => {
-            acc[curr.category] = (acc[curr.category] || 0) + curr.value;
-            return acc;
-          }, {});
+          const invoiceDataByCategory = sortedData.reduce(
+            (acc: any, curr: any) => {
+              acc[curr.category] = (acc[curr.category] || 0) + curr.value;
+              return acc;
+            },
+            {}
+          );
           context.updateInvoiceDataByMonth(month, invoiceDataByCategory);
           context.setCurrentMonth(month);
           console.log("actual month:", context.currentMonth);
         } catch (error: any) {
-          if (error.message === 'Unauthorized') {
-            toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+          if (error.message === "Unauthorized") {
+            toast.error(
+              "Tu sesión ha expirado. Por favor, inicia sesión de nuevo."
+            );
             setTimeout(() => {
-              window.location.href = '/';
+              window.location.href = "/";
             }, 3000);
           } else {
-            toast.error('Error al consultar facturas. Por favor, inténtelo de nuevo más tarde.');
+            toast.error(
+              "Error al consultar facturas. Por favor, inténtelo de nuevo más tarde."
+            );
           }
         } finally {
           context.closeLoading();
@@ -212,16 +236,22 @@ const InvoiceConsult: React.FC = () => {
       try {
         await deleteInvoice(invoiceToDelete, fileKeyToDelete);
         // Elimina la factura de la lista local después de la eliminación exitosa
-        setFilteredInvoices(filteredInvoices.filter(invoice => invoice.id !== invoiceToDelete));
-        toast.success('Factura eliminada exitosamente.');
+        setFilteredInvoices(
+          filteredInvoices.filter((invoice) => invoice.id !== invoiceToDelete)
+        );
+        toast.success("Factura eliminada exitosamente.");
       } catch (error: any) {
-        if (error.message === 'Unauthorized') {
-          toast.error('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.');
+        if (error.message === "Unauthorized") {
+          toast.error(
+            "Tu sesión ha expirado. Por favor, inicia sesión de nuevo."
+          );
           setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = "/";
           }, 3000);
         } else {
-          toast.error('Error al eliminar factura. Por favor, inténtelo de nuevo más tarde.');
+          toast.error(
+            "Error al eliminar factura. Por favor, inténtelo de nuevo más tarde."
+          );
         }
       } finally {
         context.closeLoading();
@@ -238,7 +268,9 @@ const InvoiceConsult: React.FC = () => {
   // Función para deshabilitar los meses posteriores al mes actual
   const disableFutureMonths = () => {
     const currentMonth = new Date().getMonth() + 1; // Obtiene el mes actual (1-12)
-    const selectElement = document.getElementById('monthSelect') as HTMLSelectElement;
+    const selectElement = document.getElementById(
+      "monthSelect"
+    ) as HTMLSelectElement;
     for (let i = 0; i < selectElement.options.length; i++) {
       if (parseInt(selectElement.options[i].value) > currentMonth) {
         selectElement.options[i].disabled = true;
@@ -303,34 +335,51 @@ const InvoiceConsult: React.FC = () => {
       <div className={styles.invoiceList}>
         {filteredInvoices.map((invoice) => (
           <div key={invoice.id} className={styles.invoiceItem}>
-            <div className={styles.invoiceDetails}>
-              <div>
-                <p>{invoice.date}</p>
-                <p>{invoice.description}</p>
-              </div>
-              <div>
-                <p className={styles.invoiceCategory}>{invoice.category}</p>
-              </div>
-            </div>
-            <div>
-              <div className={styles.invoiceDown}>
+            {/* Descripción: ocupa todo el ancho */}
+            <p className={styles.invoiceDescription}>{invoice.description}</p>
+
+            {/* Contenedor para los div de izquierda y derecha */}
+            <div className={styles.invoiceContent}>
+              {/* Contenido lado izquierdo */}
+              <div className={styles.invoiceLeft}>
+                <h2>SubTotal</h2>
                 <p className={styles.invoiceValue}>
-                  ${invoice.value.toFixed(2)}
+                ${(invoice.Subtotal)}
                 </p>
-                <p className={styles.invoiceUser}>
-                  {invoice.userName}
+                <h2>ITBMS</h2>
+                <p className={styles.invoiceValue}> 
+                ${((parseFloat(invoice.Subtotal || "0") * parseFloat(invoice.ITBMS || "0")) / 100).toFixed(2)} ({invoice.ITBMS || 0}%)
                 </p>
+                <h2>Total</h2>
+                <p className={styles.invoiceValue}>
+                  ${(invoice.value).toFixed(2)}
+                </p>
+              </div>
+
+              {/* Contenido lado derecho */}
+              <div className={styles.invoiceRight}>
+                <p>{invoice.date}</p>
+                <p className={styles.invoiceCategory}>{invoice.category}</p>
+                <p className={styles.invoiceUser}>{invoice.userName}</p>
                 <div className={styles.invoiceButtons}>
                   <AiOutlinePicture
                     className={styles.viewButton}
                     onClick={() => handleView(invoice.imageUrl)}
                   />
                   <AiOutlineEdit
-                    className={context.role === 'Admin' ? styles.updateButton : styles.noViewButton}
+                    className={
+                      context.role === "Admin"
+                        ? styles.updateButton
+                        : styles.noViewButton
+                    }
                     onClick={() => handleUpdate(invoice.id)}
                   />
                   <AiTwotoneDelete
-                    className={context.role === 'Admin' ? styles.deleteButton : styles.noViewButton}
+                    className={
+                      context.role === "Admin"
+                        ? styles.deleteButton
+                        : styles.noViewButton
+                    }
                     onClick={() => handleDelete(invoice.id, invoice.imageUrl)}
                   />
                 </div>
@@ -338,6 +387,14 @@ const InvoiceConsult: React.FC = () => {
             </div>
           </div>
         ))}
+      </div>
+      
+      <div className={styles.totalAmount}>
+        <p>SubTotal: ${subTotalAmount.toFixed(2)}</p>
+      </div>
+
+      <div className={styles.totalAmount}>
+        <p>ITBMS: ${itbmsAmount.toFixed(2)}</p>
       </div>
 
       <div className={styles.totalAmount}>
@@ -355,27 +412,27 @@ const InvoiceConsult: React.FC = () => {
 
       {/*Modal de confimacion de eliminacion */}
       <div className={context.modal ? styles.modalopen : styles.modalclose}>
-      {context.modal && (
-        <div className={styles.modalContent}>
-          <h2 className="text-2xl font-bold">Confirmación</h2>
-          <p className="mt-4">
-            ¿Estas seguro de que quieres eliminar esta factura?
-          </p>
-          <button
-            onClick={confirmDelete}
-            className="mt-4 p-2 bg-custom-red mr-8 text-white rounded hover:bg-gray-700 transition duration-300"
-          >
-            Eliminar
-          </button>
-          <button
-            onClick={context.closeModal}
-            className="mt-4 p-2 bg-gray-500 text-white rounded hover:bg-gray-700 transition duration-300"
-          >
-            Volver
-          </button>
-        </div>
-      )}
-    </div>
+        {context.modal && (
+          <div className={styles.modalContent}>
+            <h2 className="text-2xl font-bold">Confirmación</h2>
+            <p className="mt-4">
+              ¿Estas seguro de que quieres eliminar esta factura?
+            </p>
+            <button
+              onClick={confirmDelete}
+              className="mt-4 p-2 bg-custom-red mr-8 text-white rounded hover:bg-gray-700 transition duration-300"
+            >
+              Eliminar
+            </button>
+            <button
+              onClick={context.closeModal}
+              className="mt-4 p-2 bg-gray-500 text-white rounded hover:bg-gray-700 transition duration-300"
+            >
+              Volver
+            </button>
+          </div>
+        )}
+      </div>
       <ToastContainer />
     </div>
   );

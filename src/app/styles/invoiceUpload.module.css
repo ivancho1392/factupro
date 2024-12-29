@@ -10,10 +10,11 @@
 .uploadButton {
   background-color: rgba(58, 74, 88, 1); 
   color: white;
+  width: 300px;
   padding: 8px 16px;
   cursor: pointer;
   border: 1px solid white;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   border-radius: 5px;
 }
 
@@ -34,6 +35,15 @@
 
 .formGroup {
   margin-bottom: 16px;
+}
+
+.item2:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; 
+  align-items: flex-end;
+  text-align: right; 
+  height: 100%; 
 }
 
 .input,
@@ -88,10 +98,10 @@
 
 .inputfile {
   position: relative;
-  overflow: hidden;
   width: 100%;
   max-width: 300px;
-  margin-bottom: 16px;
+  margin: 16px;
+
 
   .selectButton {
     background-color: rgb(57, 71, 57);
