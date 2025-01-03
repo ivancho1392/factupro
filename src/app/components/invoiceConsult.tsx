@@ -13,36 +13,50 @@ import {
 import { AppContext } from "../context";
 import { parseISO, format } from "date-fns";
 
+interface Invoice {
+  id: string;
+  date: Date; 
+  category: string;
+  description: string;
+  value: number;
+  imageUrl: string;
+  userName: string;
+  Subtotal: number;
+  ITBMSUSD: number;
+}
+
 const InvoiceConsult: React.FC = () => {
   const context = useContext(AppContext);
   const [month, setMonth] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [invoices, setInvoices] = useState<
-    Array<{
-      id: string;
-      date: string;
-      category: string;
-      description: string;
-      value: number;
-      imageUrl: string;
-      userName: string;
-      Subtotal?: number;
-      ITBMSUSD?: number;
-    }>
-  >([]);
-  const [filteredInvoices, setFilteredInvoices] = useState<
-    Array<{
-      id: string;
-      date: string;
-      category: string;
-      description: string;
-      value: number;
-      imageUrl: string;
-      userName: string;
-      Subtotal?: number;
-      ITBMSUSD?: number;
-    }>
-  >([]);
+  // const [invoices, setInvoices] = useState<
+  //   Array<{
+  //     id: string;
+  //     date: string;
+  //     category: string;
+  //     description: string;
+  //     value: number;
+  //     imageUrl: string;
+  //     userName: string;
+  //     Subtotal?: number;
+  //     ITBMSUSD?: number;
+  //   }>
+  // >([]);
+  // const [filteredInvoices, setFilteredInvoices] = useState<
+  //   Array<{
+  //     id: string;
+  //     date: string;
+  //     category: string;
+  //     description: string;
+  //     value: number;
+  //     imageUrl: string;
+  //     userName: string;
+  //     Subtotal?: number;
+  //     ITBMSUSD?: number;
+  //   }>
+  // >([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [filteredInvoices, setFilteredInvoices] = useState<Invoice[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [subTotalAmount, setSubTotalAmount] = useState<number>(0);
   const [itbmsAmount, setItbmsAmount] = useState<number>(0);
@@ -50,6 +64,7 @@ const InvoiceConsult: React.FC = () => {
   const [fileKeyToDelete, setFileKeyToDelete] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<string>("2024");
 
+  // Calcular totales
   useEffect(() => {
     const calculateTotalAmount = () => {
       const total = filteredInvoices.reduce(
@@ -84,6 +99,7 @@ const InvoiceConsult: React.FC = () => {
     setSelectedYear(selectedYear);
   };
 
+  //Fetch Invoices
   useEffect(() => {
     const fetchInvoices = async () => {
       if (month) {
@@ -106,7 +122,7 @@ const InvoiceConsult: React.FC = () => {
           });
 
           const sortedData = transformedData.sort(
-            (a, b) => a.date.getTime() - b.date.getTime()
+            (a: Invoice, b: Invoice) => a.date.getTime() - b.date.getTime()
           );
 
           setInvoices(sortedData);
