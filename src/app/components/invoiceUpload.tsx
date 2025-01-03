@@ -18,6 +18,30 @@ const InvoiceUpload: React.FC = () => {
   );
   const [selectedRate, setSelectedRate] = useState<string>("");
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    // Reemplazar ',' con '.' y eliminar caracteres no válidos
+    value = value.replace(",", ".").replace(/[^0-9.]/g, "");
+
+    // Validar que solo haya un punto decimal
+    if (/^\d*\.?\d*$/.test(value)) {
+      setAmount(value);
+    }
+  };
+
+  const handleITBMSChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    // Reemplazar ',' con '.' y eliminar caracteres no válidos
+    value = value.replace(",", ".").replace(/[^0-9.]/g, "");
+
+    // Validar que solo haya un punto decimal
+    if (/^\d*\.?\d*$/.test(value)) {
+      setSelectedRate(value);
+    }
+  };
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
     if (selectedFile) {
@@ -31,19 +55,23 @@ const InvoiceUpload: React.FC = () => {
       return;
     }
 
-    if (!amount || !category || !invoiceDate) {
+    if (!amount || !selectedRate || !category || !invoiceDate) {
       toast.error("Por favor, complete todos los campos");
       return;
     }
 
+    // Convertir a números y validar
     const numericAmount = parseFloat(amount.replace(",", "."));
+    const numericRate = parseFloat(selectedRate.replace(",", "."));
 
-    if (isNaN(numericAmount)) {
-      toast.error("Por favor, ingrese un valor numérico válido");
+    if (isNaN(numericAmount) || isNaN(numericRate)) {
+      toast.error(
+        "Por favor, ingrese valores numéricos válidos para el subtotal e ITBMS"
+      );
       return;
     }
 
-    const totalAmount = calculateTotal(amount, selectedRate);
+    const totalAmount = numericAmount + numericRate;
 
     const fileReader = new FileReader();
     fileReader.onload = async () => {
@@ -51,7 +79,14 @@ const InvoiceUpload: React.FC = () => {
       context.openLoading();
       try {
         console.log(
-          "Cargando factura:","Value:", totalAmount, "Subtotal:", amount, "ITBMS:", selectedRate);
+          "Cargando factura:",
+          "Value:",
+          totalAmount,
+          "Subtotal:",
+          numericAmount,
+          "ITBMS:",
+          numericRate
+        );
         await createInvoice({
           UserName: "Nombre de usuario",
           Value: totalAmount,
@@ -59,8 +94,8 @@ const InvoiceUpload: React.FC = () => {
           Description: description,
           Category: category,
           Content: base64Data || "",
-          ITBMS: selectedRate,
-          Subtotal: amount,
+          ITBMSUSD: numericRate,
+          Subtotal: numericAmount,
         });
         toast.success("Factura cargada exitosamente");
         setTimeout(() => {
@@ -90,9 +125,8 @@ const InvoiceUpload: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.stepContainer}>
-
         {/* Paso 1 */}
-        <div className={styles.step}>	
+        <div className={styles.step}>
           <h3>Paso 1.</h3>
           <div className={styles.inputfile}>
             <label htmlFor="fileInput" className={styles.uploadButton}>
@@ -119,30 +153,28 @@ const InvoiceUpload: React.FC = () => {
           <h3>Paso 2.</h3>
           <div className={styles.formGroup}>
             <div className={styles.item2}>
-              <label>Valor sin ITBMS</label>
+              <label>Subtotal (USD)</label>
               <input
                 type="text"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value.replace(",", "."))}
+                onChange={handleAmountChange}
                 className={styles.input}
               />
-              <label>ITBMS</label>
-              <select
-                value={selectedRate ? selectedRate.valueOf() : ""}
-                onChange={(e) => setSelectedRate(e.target.value)}
+              <label>ITBMS (USD)</label>
+              <input
+                type="text"
+                value={selectedRate}
+                onChange={handleITBMSChange}
                 className={styles.input}
-              >
-                {rates.map((rate, index) => (
-                  <option key={index} value={rate.value}>
-                    {rate.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className={styles.item2}>
+              />
               <h3>Total</h3>
-              <p>${calculateTotal(amount, selectedRate).toFixed(2)} </p>
-              </div>
+              <p>
+                $
+                {(parseFloat(amount) + parseFloat(selectedRate || "0")).toFixed(
+                  2
+                )}
+              </p>
+            </div>
           </div>
           <p className={styles.stepDescription}>
             Asigna un valor sin itbms a tu factura, después discrimina el ITBMS,
@@ -150,7 +182,7 @@ const InvoiceUpload: React.FC = () => {
           </p>
         </div>
 
-        {/* Paso 3 */}         
+        {/* Paso 3 */}
         <div className={styles.step}>
           <h3>Paso 3.</h3>
           <div className={styles.formGroup}>
@@ -173,7 +205,7 @@ const InvoiceUpload: React.FC = () => {
           </p>
         </div>
 
-        {/* Paso 4 */} 
+        {/* Paso 4 */}
         <div className={styles.step}>
           <h3>Paso 4. </h3>
           <div className={styles.formGroup}>
@@ -191,7 +223,7 @@ const InvoiceUpload: React.FC = () => {
           </p>
         </div>
 
-        {/* Paso 5 */} 
+        {/* Paso 5 */}
         <div className={styles.step}>
           <h3>Paso 5.</h3>
           <div className={styles.formGroup}>
