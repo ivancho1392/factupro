@@ -29,32 +29,6 @@ const InvoiceConsult: React.FC = () => {
   const context = useContext(AppContext);
   const [month, setMonth] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  // const [invoices, setInvoices] = useState<
-  //   Array<{
-  //     id: string;
-  //     date: string;
-  //     category: string;
-  //     description: string;
-  //     value: number;
-  //     imageUrl: string;
-  //     userName: string;
-  //     Subtotal?: number;
-  //     ITBMSUSD?: number;
-  //   }>
-  // >([]);
-  // const [filteredInvoices, setFilteredInvoices] = useState<
-  //   Array<{
-  //     id: string;
-  //     date: string;
-  //     category: string;
-  //     description: string;
-  //     value: number;
-  //     imageUrl: string;
-  //     userName: string;
-  //     Subtotal?: number;
-  //     ITBMSUSD?: number;
-  //   }>
-  // >([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [filteredInvoices, setFilteredInvoices] = useState<Invoice[]>([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -168,18 +142,7 @@ const InvoiceConsult: React.FC = () => {
     filterInvoices(invoices, selectedCategory);
   };
 
-  const filterInvoices = (
-    invoicesToFilter: Array<{
-      id: string;
-      date: string;
-      category: string;
-      description: string;
-      value: number;
-      imageUrl: string;
-      userName: string;
-    }>,
-    category: string
-  ) => {
+  const filterInvoices = (invoicesToFilter: Invoice[], category: string) => {
     if (category !== "") {
       const filtered = invoicesToFilter.filter(
         (invoice) => invoice.category === category
