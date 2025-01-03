@@ -6,8 +6,10 @@ export interface Rate {
 const rates = [
     { value: '', label: 'Seleccione ITBMS para esta factura' },
     { value: '0', label: '0%' },
+    { value: '5', label: '5%' },
     { value: '7', label: '7%' },
     { value: '10', label: '10%' },
+    { value: 'otro', label: 'otro' },
   ];
   
   export default rates;

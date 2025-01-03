@@ -26,8 +26,8 @@ const InvoiceConsult: React.FC = () => {
       value: number;
       imageUrl: string;
       userName: string;
-      Subtotal?: string; 
-    ITBMS?: string;
+      Subtotal?: number;
+      ITBMSUSD?: number;
     }>
   >([]);
   const [filteredInvoices, setFilteredInvoices] = useState<
@@ -39,8 +39,8 @@ const InvoiceConsult: React.FC = () => {
       value: number;
       imageUrl: string;
       userName: string;
-      Subtotal?: string;
-      ITBMS?: string;
+      Subtotal?: number;
+      ITBMSUSD?: number;
     }>
   >([]);
   const [totalAmount, setTotalAmount] = useState<number>(0);
@@ -56,16 +56,22 @@ const InvoiceConsult: React.FC = () => {
         (accumulator, currentInvoice) => accumulator + currentInvoice.value,
         0
       );
-      setTotalAmount(total);
       const subTotal = filteredInvoices.reduce(
-        (accumulator, currentInvoice) => accumulator + (parseFloat(currentInvoice.Subtotal || "0") || 0),
+        (accumulator, currentInvoice) =>
+          accumulator + (currentInvoice.Subtotal || 0),
         0
       );
+      const itbmsTotal = filteredInvoices.reduce(
+        (accumulator, currentInvoice) =>
+          accumulator + (currentInvoice.ITBMSUSD || 0),
+        0
+      );
+
+      setTotalAmount(total);
       setSubTotalAmount(subTotal);
-      setItbmsAmount(total - subTotal);
+      setItbmsAmount(itbmsTotal);
     };
     calculateTotalAmount();
-
   }, [filteredInvoices]);
 
   const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -86,31 +92,21 @@ const InvoiceConsult: React.FC = () => {
           const data = await getInvoices(`${selectedYear}-${month}`);
           // const data = await getInvoices(`2024-${month}`);
           const transformedData = data.map((invoice: any) => {
-            const date = parseISO(invoice.Date);
             return {
               id: invoice.InvoiceId,
-              date: date.toLocaleDateString("es-ES", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              }),
+              date: parseISO(invoice.Date), // Mantén la fecha como objeto Date
               category: invoice.Category || "Sin Categoría",
               description: invoice.Description,
-              value: invoice.Value,
+              value: parseFloat(invoice.Value) || 0,
               imageUrl: invoice.ImgLink,
               userName: invoice.UserName,
-              ITBMS: invoice.ITBMS || "--",
-              Subtotal: invoice.SubtotalS || "--",
+              Subtotal: parseFloat(invoice.Subtotal || "0"),
+              ITBMSUSD: parseFloat(invoice.ITBMSUSD || "0"),
             };
           });
 
-          // Ordenar las facturas por fecha
           const sortedData = transformedData.sort(
-            (a: { date: string }, b: { date: string }) => {
-              const dateA = parseISO(a.date.split("/").reverse().join("/"));
-              const dateB = parseISO(b.date.split("/").reverse().join("/"));
-              return dateA.getTime() - dateB.getTime();
-            }
+            (a, b) => a.date.getTime() - b.date.getTime()
           );
 
           setInvoices(sortedData);
@@ -267,13 +263,25 @@ const InvoiceConsult: React.FC = () => {
 
   // Función para deshabilitar los meses posteriores al mes actual
   const disableFutureMonths = () => {
-    const currentMonth = new Date().getMonth() + 1; // Obtiene el mes actual (1-12)
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+
     const selectElement = document.getElementById(
       "monthSelect"
     ) as HTMLSelectElement;
+
     for (let i = 0; i < selectElement.options.length; i++) {
-      if (parseInt(selectElement.options[i].value) > currentMonth) {
+      const optionValue = parseInt(selectElement.options[i].value);
+
+      // Si es el año actual, deshabilita los meses futuros
+      if (
+        parseInt(selectedYear) === currentYear &&
+        optionValue > currentMonth
+      ) {
         selectElement.options[i].disabled = true;
+      } else {
+        selectElement.options[i].disabled = false;
       }
     }
   };
@@ -281,7 +289,7 @@ const InvoiceConsult: React.FC = () => {
   // Llama a disableFutureMonths cuando el componente se monte
   useEffect(() => {
     disableFutureMonths();
-  }, []);
+  }, [selectedYear]);
 
   return (
     <div className={styles.container}>
@@ -344,21 +352,21 @@ const InvoiceConsult: React.FC = () => {
               <div className={styles.invoiceLeft}>
                 <h2>SubTotal</h2>
                 <p className={styles.invoiceValue}>
-                ${(invoice.Subtotal)}
+                  ${invoice.Subtotal?.toFixed(2) || "0.00"}
                 </p>
                 <h2>ITBMS</h2>
-                <p className={styles.invoiceValue}> 
-                ${((parseFloat(invoice.Subtotal || "0") * parseFloat(invoice.ITBMS || "0")) / 100).toFixed(2)} ({invoice.ITBMS || 0}%)
+                <p className={styles.invoiceValue}>
+                  ${invoice.ITBMSUSD?.toFixed(2) || "0.00"}
                 </p>
                 <h2>Total</h2>
                 <p className={styles.invoiceValue}>
-                  ${(invoice.value).toFixed(2)}
+                  ${invoice.value.toFixed(2)}
                 </p>
               </div>
 
               {/* Contenido lado derecho */}
               <div className={styles.invoiceRight}>
-                <p>{invoice.date}</p>
+                <p>{format(new Date(invoice.date), "dd/MM/yyyy")}</p>
                 <p className={styles.invoiceCategory}>{invoice.category}</p>
                 <p className={styles.invoiceUser}>{invoice.userName}</p>
                 <div className={styles.invoiceButtons}>
@@ -388,7 +396,7 @@ const InvoiceConsult: React.FC = () => {
           </div>
         ))}
       </div>
-      
+
       <div className={styles.totalAmount}>
         <p>SubTotal: ${subTotalAmount.toFixed(2)}</p>
       </div>
