@@ -10,7 +10,7 @@ interface DecodedIdToken {
 // Reemplaza estos valores con los de tu User Pool
 const poolData = {
   UserPoolId: process.env.USER_POOL_ID || 'us-east-1_TCG58RR5U',
-  ClientId: process.env.CLIENT_ID || '5t043hsh449dc84u15076fvgbo',      
+  ClientId: process.env.CLIENT_ID,      
 };
 
 const userPool = new CognitoUserPool(poolData);

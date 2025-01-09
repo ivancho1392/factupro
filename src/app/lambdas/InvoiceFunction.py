@@ -15,6 +15,7 @@ dynamodb = boto3.resource('dynamodb')
 table_name = os.getenv('TABLE_NAME', 'Invoices')
 table = dynamodb.Table(table_name)
 
+## Query Invoices
 def query_invoices(month=None):
     try:
         scan_kwargs = {}
@@ -45,7 +46,7 @@ def query_invoices(month=None):
     except Exception as e:
         return None, str(e)
 
-
+## Upload to S3
 def upload_to_s3(file_content, file_extension):
     try:
         file_key = f"invoices/{str(uuid4())}.{file_extension}"
@@ -73,6 +74,7 @@ def upload_to_s3(file_content, file_extension):
     except Exception as e:
         return None, str(e)
 
+## Save metadata to DynamoDB
 def save_to_dynamodb(data, s3_url):
     try:
         invoice_id = str(uuid4())
@@ -91,14 +93,16 @@ def save_to_dynamodb(data, s3_url):
         return None
     except Exception as e:
         return str(e)
-        
+
+## Delete image from S3        
 def delete_from_s3(file_url):
     try:
         s3_client.delete_object(Bucket=bucket_name, Key=file_url)
         return None
     except Exception as e:
         return str(e)
-        
+
+## Delete metadata from DynamoDB  
 def delete_invoice(invoice_id, file_url):
     try:
         error = delete_from_s3(file_url)
@@ -115,20 +119,22 @@ def delete_invoice(invoice_id, file_url):
     except Exception as e:
         return str(e)
 
+## Lambda Handler
 def lambda_handler(event, context):
     try:
-        print("Event: ", json.dumps(event))
-
+        # Check User Auth
         if 'requestContext' not in event or 'authorizer' not in event['requestContext'] or 'claims' not in event['requestContext']['authorizer']:
             raise Exception('User is not authenticated')
 
         http_method = event['httpMethod']
         path = event['path']
         
+        # Get User Data
         user_claims = event['requestContext']['authorizer']['claims']
         user_name = user_claims.get('cognito:username', 'unknown')
         user_email = user_claims.get('email', 'unknown')
 
+        # POST /invoice
         if http_method == 'POST' and path == '/invoice':
             body = event['body']
             data = json.loads(body)
@@ -162,6 +168,8 @@ def lambda_handler(event, context):
                     'event': event
                 })
             }
+        
+        # GET /invoice
         elif http_method == 'GET' and path == '/invoice':
             month = event['queryStringParameters'].get('month', '') if event['queryStringParameters'] else ''
             invoices, error = query_invoices(month=month)
@@ -172,6 +180,8 @@ def lambda_handler(event, context):
                 'statusCode': 200,
                 'body': json.dumps(invoices)
             }
+        
+        # DELETE /invoice
         elif http_method == 'DELETE' and path == '/invoice':
             invoice_id = event['queryStringParameters'].get('invoiceId','')if event['queryStringParameters'] else ''
             file_url = event['queryStringParameters'].get('fileUrl','')if event['queryStringParameters'] else ''
@@ -185,6 +195,8 @@ def lambda_handler(event, context):
                     'message': 'Factura eliminada exitosamente!'
                 })
             }
+        
+        # Others
         else:
             response = {
                 'statusCode': 400,
@@ -192,6 +204,8 @@ def lambda_handler(event, context):
                     'message': 'Método o ruta inválida!'
                 })
             }
+    
+    # Handle exceptions
     except Exception as e:
         response = {
             'statusCode': 500,
@@ -201,6 +215,7 @@ def lambda_handler(event, context):
             })
         }
 
+    # Add CORS headers
     response['headers'] = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
