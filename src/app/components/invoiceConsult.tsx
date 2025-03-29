@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import styles from "../styles/invoiceConsult.module.css";
 import categories from "../utils/categories";
-import { jsPDF } from "jspdf";
 import { getInvoices, deleteInvoice } from "../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import generateReport from "../utils/generateReport";
 import {
   AiOutlinePicture,
   AiOutlineEdit,
@@ -153,44 +153,16 @@ const InvoiceConsult: React.FC = () => {
     }
   };
 
-  const generateReport = () => {
-    const doc = new jsPDF();
-
-    doc.setFontSize(10);
-    let y = 25;
-
-    const logo = new Image();
-    logo.src = "/logo.png";
-    doc.addImage(logo, "PNG", 10, 10, 50, 10);
-
-    let reportTitle = "Reporte de Facturas";
-    if (month !== "") {
-      reportTitle += ` mes ${month}`;
-    }
-    if (selectedCategory !== "") {
-      reportTitle += ` categoría ${selectedCategory}`;
-    }
-
-    doc.text(reportTitle, 60, y);
-    y += 10;
-
-    doc.line(10, y, 200, y);
-    y += 5;
-
-    filteredInvoices.forEach((invoice) => {
-      doc.text(
-        `Fecha: ${invoice.date} | Categoría: ${invoice.category} | Descripción: ${invoice.description} | Valor: ${invoice.value}`,
-        10,
-        y
-      );
-      y += 5;
-
-      doc.line(10, y, 200, y);
-      y += 5;
+  const handleGenerateReport = () => {
+    generateReport({
+      invoices: filteredInvoices,
+      month: month,
+      year: selectedYear,
+      category: selectedCategory,
+      totalAmount: totalAmount,
+      subTotalAmount: subTotalAmount,
+      itbmsAmount: itbmsAmount,
     });
-    y += 10;
-    doc.text(`Total: ${totalAmount}`, 10, y);
-    doc.save("reporte_facturas.pdf");
   };
 
   const handleUpdate = (id: string) => {
@@ -391,7 +363,7 @@ const InvoiceConsult: React.FC = () => {
       {/* Botón de generación de reporte */}
       <button
         className={styles.reportButton}
-        onClick={generateReport}
+        onClick={handleGenerateReport}
         disabled={filteredInvoices.length === 0}
       >
         Generar Reporte
