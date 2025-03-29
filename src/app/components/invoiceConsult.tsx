@@ -27,7 +27,7 @@ interface Invoice {
 
 const InvoiceConsult: React.FC = () => {
   const context = useContext(AppContext);
-  const [month, setMonth] = useState<string>("");
+  const [month, setMonth] = useState<string>("01");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [filteredInvoices, setFilteredInvoices] = useState<Invoice[]>([]);
