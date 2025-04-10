@@ -354,25 +354,25 @@ const InvoiceConsult: React.FC = () => {
       </div>
 
 
-      <div className={styles.reportButtons}>
-        <button
-          className={styles.reportBtn}
-          onClick={handleGenerateReport}
-          disabled={filteredInvoices.length === 0}
-        >
-          <AiOutlineDownload className={styles.downloadIcon} />
-          Generar PDF
-        </button>
+      {filteredInvoices.length > 0 && (
+        <div className={styles.reportButtons}>
+          <button
+            className={styles.reportBtn}
+            onClick={handleGenerateReport}
+          >
+            <AiOutlineDownload className={styles.downloadIcon} />
+            Generar PDF
+          </button>
 
-        <button
-          className={styles.reportBtn}
-          onClick={handleGenerateExcelReport}
-          disabled={filteredInvoices.length === 0}
-        >
-          <AiOutlineDownload className={styles.downloadIcon} />
-          Generar Excel
-        </button>
-      </div>
+          <button
+            className={styles.reportBtn}
+            onClick={handleGenerateExcelReport}
+          >
+            <AiOutlineDownload className={styles.downloadIcon} />
+            Generar Excel
+          </button>
+        </div>
+      )}
 
       {/*Modal de confimacion de eliminacion */}
       <div className={context.modal ? styles.modalopen : styles.modalclose}>
