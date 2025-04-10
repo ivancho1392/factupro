@@ -5,6 +5,7 @@ import { getInvoices, deleteInvoice } from "../services/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import generateReport from "../utils/generateReport";
+import generateXLSXReport from "../utils/generateXLSXReport";
 import {
   AiOutlinePicture,
   AiOutlineEdit,
@@ -15,7 +16,7 @@ import { parseISO, format } from "date-fns";
 
 interface Invoice {
   id: string;
-  date: Date; 
+  date: Date;
   category: string;
   description: string;
   value: number;
@@ -24,6 +25,7 @@ interface Invoice {
   Subtotal: number;
   ITBMSUSD: number;
 }
+import { AiOutlineDownload } from "react-icons/ai";
 
 const InvoiceConsult: React.FC = () => {
   const context = useContext(AppContext);
@@ -165,6 +167,18 @@ const InvoiceConsult: React.FC = () => {
     });
   };
 
+  const handleGenerateExcelReport = () => {
+    generateXLSXReport({
+      invoices: filteredInvoices,
+      month: month,
+      year: selectedYear,
+      category: selectedCategory,
+      totalAmount: totalAmount,
+      subTotalAmount: subTotalAmount,
+      itbmsAmount: itbmsAmount,
+    });
+  };
+
   const handleUpdate = (id: string) => {
     // Lógica para actualizar la factura con el ID proporcionado
     console.log("Actualizar factura con ID:", id);
@@ -243,6 +257,7 @@ const InvoiceConsult: React.FC = () => {
   }, [selectedYear]);
 
   return (
+
     <div className={styles.container}>
       {/* Select para meses */}
       <select
@@ -293,56 +308,34 @@ const InvoiceConsult: React.FC = () => {
       {/* Lista para mostrar facturas */}
       <div className={styles.invoiceList}>
         {filteredInvoices.map((invoice) => (
-          <div key={invoice.id} className={styles.invoiceItem}>
-            {/* Descripción: ocupa todo el ancho */}
-            <p className={styles.invoiceDescription}>{invoice.description}</p>
+          <div key={invoice.id} className={styles.invoiceCard}>
+            <div className={styles.cardHeader}>
+              <h3 className={styles.invoiceTitle}>{invoice.description}</h3>
+              <span className={styles.invoiceDate}>{format(new Date(invoice.date), "dd/MM/yyyy")}</span>
+            </div>
 
-            {/* Contenedor para los div de izquierda y derecha */}
-            <div className={styles.invoiceContent}>
-              {/* Contenido lado izquierdo */}
-              <div className={styles.invoiceLeft}>
-                <h2>SubTotal</h2>
-                <p className={styles.invoiceValue}>
-                  ${invoice.Subtotal?.toFixed(2) || "0.00"}
-                </p>
-                <h2>ITBMS</h2>
-                <p className={styles.invoiceValue}>
-                  ${invoice.ITBMSUSD?.toFixed(2) || "0.00"}
-                </p>
-                <h2>Total</h2>
-                <p className={styles.invoiceValue}>
-                  ${invoice.value.toFixed(2)}
-                </p>
+            <div className={styles.cardBody}>
+              <div className={styles.cardInfoLeft}>
+                <p><strong>Categoría:</strong> {invoice.category}</p>
+                <p><strong>Usuario:</strong> {invoice.userName}</p>
               </div>
+              <div className={styles.cardInfoRight}>
+                <p>
+                  <strong>Subtotal:</strong> ${invoice.Subtotal.toFixed(2)} |{" "}
+                  <strong>ITBMS:</strong> ${invoice.ITBMSUSD.toFixed(2)}
+                </p>
+                <p><strong>Total:</strong> ${invoice.value.toFixed(2)}</p>
+              </div>
+            </div>
 
-              {/* Contenido lado derecho */}
-              <div className={styles.invoiceRight}>
-                <p>{format(new Date(invoice.date), "dd/MM/yyyy")}</p>
-                <p className={styles.invoiceCategory}>{invoice.category}</p>
-                <p className={styles.invoiceUser}>{invoice.userName}</p>
-                <div className={styles.invoiceButtons}>
-                  <AiOutlinePicture
-                    className={styles.viewButton}
-                    onClick={() => handleView(invoice.imageUrl)}
-                  />
-                  <AiOutlineEdit
-                    className={
-                      context.role === "Admin"
-                        ? styles.updateButton
-                        : styles.noViewButton
-                    }
-                    onClick={() => handleUpdate(invoice.id)}
-                  />
-                  <AiTwotoneDelete
-                    className={
-                      context.role === "Admin"
-                        ? styles.deleteButton
-                        : styles.noViewButton
-                    }
-                    onClick={() => handleDelete(invoice.id, invoice.imageUrl)}
-                  />
-                </div>
-              </div>
+            <div className={styles.cardActions}>
+              <AiOutlinePicture className={styles.iconAction} onClick={() => handleView(invoice.imageUrl)} />
+              {context.role === "Admin" && (
+                <>
+                  <AiOutlineEdit className={styles.iconAction} onClick={() => handleUpdate(invoice.id)} />
+                  <AiTwotoneDelete className={styles.iconDelete} onClick={() => handleDelete(invoice.id, invoice.imageUrl)} />
+                </>
+              )}
             </div>
           </div>
         ))}
@@ -360,14 +353,26 @@ const InvoiceConsult: React.FC = () => {
         <p>Total: ${totalAmount.toFixed(2)}</p>
       </div>
 
-      {/* Botón de generación de reporte */}
-      <button
-        className={styles.reportButton}
-        onClick={handleGenerateReport}
-        disabled={filteredInvoices.length === 0}
-      >
-        Generar Reporte
-      </button>
+
+      <div className={styles.reportButtons}>
+        <button
+          className={styles.reportBtn}
+          onClick={handleGenerateReport}
+          disabled={filteredInvoices.length === 0}
+        >
+          <AiOutlineDownload className={styles.downloadIcon} />
+          Generar PDF
+        </button>
+
+        <button
+          className={styles.reportBtn}
+          onClick={handleGenerateExcelReport}
+          disabled={filteredInvoices.length === 0}
+        >
+          <AiOutlineDownload className={styles.downloadIcon} />
+          Generar Excel
+        </button>
+      </div>
 
       {/*Modal de confimacion de eliminacion */}
       <div className={context.modal ? styles.modalopen : styles.modalclose}>
