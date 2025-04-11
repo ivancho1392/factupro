@@ -341,17 +341,21 @@ const InvoiceConsult: React.FC = () => {
         ))}
       </div>
 
-      <div className={styles.totalAmount}>
-        <p>SubTotal: ${subTotalAmount.toFixed(2)}</p>
-      </div>
+      {filteredInvoices.length > 0 && (
+        <>
+          <div className={styles.totalAmount}>
+            <p>SubTotal: ${subTotalAmount.toFixed(2)}</p>
+          </div>
 
-      <div className={styles.totalAmount}>
-        <p>ITBMS: ${itbmsAmount.toFixed(2)}</p>
-      </div>
+          <div className={styles.totalAmount}>
+            <p>ITBMS: ${itbmsAmount.toFixed(2)}</p>
+          </div>
 
-      <div className={styles.totalAmount}>
-        <p>Total: ${totalAmount.toFixed(2)}</p>
-      </div>
+          <div className={styles.totalAmount}>
+            <p>Total: ${totalAmount.toFixed(2)}</p>
+          </div>
+        </>
+      )}
 
 
       {filteredInvoices.length > 0 && (
