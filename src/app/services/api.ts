@@ -35,6 +35,26 @@ export async function createInvoice(data: InvoiceData): Promise<any> {
   return await response.json();
 }
 
+export async function analyzeInvoiceIA(data: { Content: string }): Promise<any> {
+  const token = localStorage.getItem('idToken');
+  const url = process.env.ANALYZE_INVOICE_IA_ENDPOINT || 'https://k9nm0v7rpk.execute-api.us-east-1.amazonaws.com/dev/InvoiceFunctionIA';
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Ocurrió un error en el análisis IA');
+  }
+
+  return await response.json();
+}
 
 export async function getInvoices(month?: string): Promise<any> {
   const token = localStorage.getItem('idToken');
