@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, ReactNode } from "react";
 import styles from "../styles/quoteCalculator.module.css";
 
 /** ===== Config ===== */
@@ -16,6 +16,13 @@ const fmt = (n: number) =>
     maximumFractionDigits: 2,
   });
 
+// TIPOS
+type SectionCardProps = {
+  icon?: ReactNode;
+  title: string;
+  className?: string;
+  children?: ReactNode; // <-- clave
+};
 type PeriodUnit = "Días" | "Meses";
 type Row = { id: string; qty: number; description: string; unit: number; };
 type PersistedState = {
@@ -35,10 +42,8 @@ type PersistedState = {
   periodValue: number;
 };
 
-/** ===== UI helpers ===== */
-const SectionCard: React.FC<{ icon?: React.ReactNode; title: string; className?: string }> = ({
-  icon, title, className = "", children
-}) => (
+// COMPONENTE
+const SectionCard = ({ icon, title, className = "", children }: SectionCardProps) => (
   <section className={`${styles.card} ${className}`}>
     <div className={styles.cardHeader}>
       {icon ?? null}
