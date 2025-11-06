@@ -6,17 +6,19 @@ import styles from "../../styles/sidebar.module.css";
 
 // Define los tipos de los props
 interface SidebarProps {
-  activeComponent: "upload" | "consult" | "uploadIA" | null;
-  setActiveComponent: (component: "upload" | "consult" | "uploadIA" | null) => void;
+  activeComponent: "upload" | "consult" | "uploadIA" | "calculator" | null;
+  setActiveComponent: (
+    component: "upload" | "consult" | "uploadIA" | "calculator" | null
+  ) => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ activeComponent, setActiveComponent }) => {
   const { menuVisible, toggleMenu } = useContext(MenuVisibilityContext);
 
-  const handleOptionClick = (option: "upload" | "consult" | "uploadIA" | null) => {
+  const handleOptionClick = (option: "upload" | "consult" | "uploadIA" | "calculator" | null) => {
     setActiveComponent(option);
     if (window.innerWidth <= 768) {
-      toggleMenu(); // Cierra el menú en mobile después de seleccionar una opción
+      toggleMenu(); 
     }
   };
 
@@ -39,6 +41,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeComponent, setActiveComponent }
         onClick={() => handleOptionClick(activeComponent === "uploadIA" ? null : "uploadIA")}
       >
         Cargar con IA {activeComponent === "uploadIA" ? <IoCloseSharp /> : <FaChevronDown />}
+      </button>
+      <button
+        className={`${styles.buttonSide} ${activeComponent === "calculator" ? styles.active : ""}`}
+        onClick={() => handleOptionClick(activeComponent === "calculator" ? null : "calculator")}
+      >
+        Calculadora Cotizaciones {activeComponent === "calculator" ? <IoCloseSharp /> : <FaChevronDown />}
       </button>
     </aside>
   );

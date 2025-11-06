@@ -6,6 +6,25 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
+  --brand-dark: rgba(58, 74, 88, 1);        
+  --brand-dark-80: rgba(58, 74, 88, 0.8);
+  --bg-app: #e3e3e3;
+  --white: #fff;
+
+  --blue-1: #2e9e4a;
+  --blue-2: #219241;
+  --blue-3: #1a7438;
+
+  --green-1: #36d399;
+  --green-2: #2ec49c;
+
+  --gray-10: #f7f7f7;
+  --gray-20: #f0f2f5;
+  --gray-30: #e5e7eb;
+  --gray-50: #6b7280;
+  --gray-70: #374151;
+
+  --red-60: #dc2626;
 }
 
 body {

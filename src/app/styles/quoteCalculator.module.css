@@ -1,0 +1,197 @@
+
+/* ===== Layout general ===== */
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 16px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tabBtn {
+  background: #f1f3f5;
+  color: var(--gray-70);
+  border: 1px solid var(--gray-30);
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+.tabBtn:hover { background: #e9ecef; }
+
+.tabActive {
+  background: var(--blue-3);
+  color: white;
+  border-color: var(--blue-3);
+}
+
+/* ===== Cards / Secciones ===== */
+.card {
+  background: var(--white);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  margin-bottom: 16px;
+}
+
+.cardHeader {
+  background: linear-gradient(90deg, var(--blue-2), var(--blue-1));
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.cardBody {
+  padding: 16px 18px;
+}
+
+/* ===== Formularios ===== */
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 768px) {
+  .row.two { grid-template-columns: 1fr 1fr; }
+  .row.three { grid-template-columns: 1fr 2fr 1fr; }
+}
+
+.label {
+  display: block;
+  color: var(--gray-70);
+  margin-bottom: 6px;
+}
+
+.input, .select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--gray-30);
+  background: #f9fafb;
+  padding: 10px 12px;
+  border-radius: 8px;
+  outline: none;
+}
+.input[readonly] {
+  background: #f3f4f6;
+}
+.help {
+  font-size: .8rem;
+  color: var(--gray-50);
+  margin-top: 6px;
+}
+
+/* ===== Botones ===== */
+.btn {
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, opacity .1s;
+  border: 1px solid transparent;
+}
+
+.btnAdd {
+  color: white;
+  background: linear-gradient(90deg, var(--green-2), var(--green-1));
+  border-color: #23b38a;
+}
+.btnAdd:hover { opacity: .95; }
+
+.btnPrimary {
+  color: white;
+  background: var(--brand-dark);
+  border: 1px solid white;
+}
+.btnPrimary:hover {
+  background: var(--brand-dark-80);
+  border-color: #ddd;
+}
+
+.btnGhost {
+  background: #fff;
+  border: 1px solid var(--gray-30);
+}
+.btnGhost:hover { background: var(--gray-10); }
+
+/* ===== Tabla de items ===== */
+.tableWrap {
+  border: 1px solid var(--gray-30);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.thead th {
+  background: var(--gray-20);
+  text-align: left;
+  padding: 12px 14px;
+}
+.tbody td {
+  padding: 12px 14px;
+  border-top: 1px solid var(--gray-30);
+}
+
+.empty {
+  text-align: center;
+  color: var(--gray-50);
+  padding: 20px 0;
+}
+
+.totalBar {
+  background: var(--gray-20);
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 14px;
+}
+.totalPill {
+  border: 1px solid var(--gray-30);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.totalPillLabel { color: var(--gray-50); margin-right: 10px; }
+.totalPillValue { color: var(--blue-3); font-weight: 700; font-size: 1.1rem; }
+
+/* ===== Resumen y márgenes ===== */
+.summaryLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-30);
+}
+.summaryDanger { color: var(--red-60); font-weight: 600; }
+.summaryStrong { color: var(--blue-3); font-weight: 800; font-size: 1.1rem; }
+
+.marginCard {
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+.marginPct { color: #15803d; font-size: 1.6rem; font-weight: 800; }
+.marginLabel { color: var(--gray-50); font-size: .9rem; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}

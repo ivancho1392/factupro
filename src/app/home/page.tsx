@@ -9,7 +9,7 @@ import { AppContext } from "../context/index";
 import { MenuVisibilityProvider } from "../context/menuVisibilityContext";
 
 const Home: React.FC = () => {
-  const [activeComponent, setActiveComponent] = useState<"consult" | "upload" | "uploadIA" | null>(null);
+  const [activeComponent, setActiveComponent] = useState<"consult" | "upload" | "uploadIA" | "calculator" | null>(null);
   const context = useContext(AppContext);
 
   return (
