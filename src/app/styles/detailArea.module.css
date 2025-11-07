@@ -14,3 +14,64 @@
     margin-left: 0; /* Asegura que no tenga margen izquierdo */
   }
 }
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: rgba(255,255,255,0.5);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  padding: 20px;
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: 1.1fr 1fr;
+    align-items: center;
+  }
+}
+
+.heroText { padding: 8px 6px; }
+.heroTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 10px;
+  text-align: left;
+}
+.heroP {
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.heroList {
+  margin: 8px 0 14px;
+  padding-left: 0;
+  list-style: none;
+  color: #111827;
+}
+.heroList li { margin: 6px 0; }
+.heroFoot { color: #4b5563; font-size: 0.95rem; }
+
+.heroImageWrap {
+  position: relative;
+  width: 100%;
+  min-height: 260px;      /* alto mínimo en mobile */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0b1120;    /* fondo neutro por si la imagen no cubre */
+}
+
+@media (min-width: 900px) {
+  .heroImageWrap { min-height: 420px; }
+}
+
+.heroImage {
+  object-fit: cover;      /* llena el contenedor */
+  object-position: center;
+  /* si tu arte tiene transparencia y quieres edges suaves: */
+  /* image-rendering: -webkit-optimize-contrast; */
+}

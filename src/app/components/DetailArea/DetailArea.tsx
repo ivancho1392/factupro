@@ -7,6 +7,7 @@ import { Pie } from "react-chartjs-2";
 import styles from "../../styles/detailArea.module.css";
 import { chartColors } from "../../home/colors";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import Image from "next/image";
 
 type ActiveComponentType = "consult" | "upload" | "uploadIA" | "calculator" | null;
 
@@ -81,25 +82,38 @@ const DetailArea: React.FC<DetailAreaProps> = ({ activeComponent, context }) => 
 
       {/* Gráfico o bienvenida si no hay módulo activo ni datos */}
       {!["consult", "upload", "uploadIA", "calculator"].includes(activeComponent || "") && isEmptyData ? (
-        <div className="max-w-2xl mx-auto text-center p-6 bg-white/50 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            Bienvenido a FactuPro
-          </h2>
-          <p className="text-gray-700 text-base leading-relaxed">
-            Este sistema está diseñado para que TECHVERTICAL SA pueda registrar y consultar sus facturas de compra.
-            <br /><br />
-            Usa el menú lateral para subir nuevas facturas o consultar reportes por mes y categoría.
-            También puedes generar reportes en formato PDF o Excel.
-            <br /><br />
-            Si tienes dudas, no dudes en contactar al administrador del sistema.
+      <section className={styles.hero}>
+        <div className={styles.heroText}>
+          <h2 className={styles.heroTitle}>Bienvenido a FactuPro</h2>
+          <p className={styles.heroP}>
+            Registra, organiza y consulta tus facturas en un solo lugar.
+            Genera reportes por mes y categoría, exporta a PDF o Excel y
+            analiza tus gastos con gráficos automáticos.
+          </p>
+          <ul className={styles.heroList}>
+            <li> Carga y consulta de facturas</li>
+            <li> Análisis inteligente</li>
+            <li> Facturas categorizadas</li>
+          </ul>
+          <p className={styles.heroFoot}>
+            Usa el menú lateral para empezar. Si necesitas ayuda, contacta al administrador.
           </p>
         </div>
-      ) : (
-        !isEmptyData && 
-        activeComponent !== "calculator" && ( 
-          <Pie data={data} />
-        )
-      )}
+
+        <div className={styles.heroImageWrap}>
+          <Image
+            src="/image1.png"
+            alt="Funcionalidades de FactuPro"
+            fill
+            className={styles.heroImage}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority
+          />
+        </div>
+      </section>
+    ) : (
+      !isEmptyData && activeComponent !== "calculator" && <Pie data={data} />
+    )}
     </main>
   );
 };
