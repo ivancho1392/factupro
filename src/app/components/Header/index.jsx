@@ -50,7 +50,7 @@ const Header = () => {
       <div className={styles.header_bottom}>
         {/* Botón de menú, solo visible en mobile */}
         <AiOutlineMenu size={30} onClick={toggleMenu} className={styles.menuButton} />
-        <h1 className={styles.header_title}>FactuPro - Gestiona tu factura</h1>
+        <h1 className={styles.header_title}>FactuPro - Gestiona tus Facturas, Cotizaciones y Presupuestos</h1>
         <div className={styles.header_user_section}>
           {context.menuAccount ? (
             <AiOutlineCloseSquare size={30} onClick={toggleAccountMenu} className="cursor-pointer" />

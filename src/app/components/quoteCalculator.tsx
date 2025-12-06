@@ -186,14 +186,14 @@ const createEmptyScheduleWeek = (): ScheduleWeekConfig => ({
     { enabled: false, start: "08:00", end: "17:00", isHoliday: false, mealMinutes: 30 }, // X
     { enabled: false, start: "08:00", end: "17:00", isHoliday: false, mealMinutes: 30 }, // J
     { enabled: false, start: "08:00", end: "17:00", isHoliday: false, mealMinutes: 30 }, // V
-    { enabled: false, start: "08:00", end: "13:00", isHoliday: false, mealMinutes: 0 },  // S
-    { enabled: false, start: "08:00", end: "17:00", isHoliday: false, mealMinutes: 0 },  // D
+    { enabled: false, start: "08:00", end: "13:00", isHoliday: false, mealMinutes: 0 }, // S
+    { enabled: false, start: "08:00", end: "17:00", isHoliday: false, mealMinutes: 0 }, // D
   ],
 });
 
 const DEFAULT_STATE: PersistedState = {
-  techHourlyRate: 0,
-  helperHourlyRate: 0,
+  techHourlyRate: 5.7,
+  helperHourlyRate: 4.18,
   contractHoursPerMonth: CONTRACT_HOURS_DEFAULT,
   itemsSupplies: [],
   itemsTransport: [],
@@ -525,41 +525,53 @@ const ItemsTable: React.FC<{
 
   return (
     <SectionCard title={title} icon={icon}>
-      <div className={`${styles.row} ${styles.three}`} style={{ marginBottom: 12 }}>
-        <input
-          type="number"
-          min={1}
-          inputMode="numeric"
-          value={qty}
-          onChange={(e) => setQty(Number(e.target.value))}
-          className={styles.input}
-          placeholder="Cantidad"
-        />
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className={styles.input}
-          placeholder="Descripción del ítem"
-        />
-        <div style={{ display: "flex", gap: 8 }}>
-          <input
-            type="number"
-            min={0}
-            step={0.01}
-            inputMode="decimal"
-            value={unit === 0 ? "" : unit}
-            onChange={(e) => setUnit(Number(e.target.value))}
-            className={styles.input}
-            placeholder="Valor unitario"
-          />
-          <button
-            type="button"
-            onClick={addItem}
-            className={`${styles.btn} ${styles.btnAdd}`}
-          >
-            + Agregar
-          </button>
+      {/* Formulario en 2 filas controladas */}
+      <div className={styles.itemForm}>
+        <div className={styles.itemFormRow}>
+          <div className={styles.itemQtyCell}>
+            <input
+              type="number"
+              min={1}
+              inputMode="numeric"
+              value={qty}
+              onChange={(e) => setQty(Number(e.target.value))}
+              className={styles.input}
+              placeholder="Cantidad"
+            />
+          </div>
+          <div className={styles.itemDescCell}>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={styles.input}
+              placeholder="Descripción del ítem"
+            />
+          </div>
+        </div>
+
+        <div className={styles.itemFormRow}>
+          <div className={styles.itemUnitCell}>
+            <input
+              type="number"
+              min={0}
+              step={0.01}
+              inputMode="decimal"
+              value={unit === 0 ? "" : unit}
+              onChange={(e) => setUnit(Number(e.target.value))}
+              className={styles.input}
+              placeholder="Valor unitario"
+            />
+          </div>
+          <div className={styles.itemAddCell}>
+            <button
+              type="button"
+              onClick={addItem}
+              className={`${styles.btn} ${styles.btnAdd}`}
+            >
+              + Agregar
+            </button>
+          </div>
         </div>
       </div>
 
@@ -836,14 +848,8 @@ const CalculadoraCotizaciones: React.FC = () => {
       totalOvertime,
     [totalLabor, totalSupplies, totalTransport, totalEpp, totalOther, totalOvertime]
   );
-  const contingency = useMemo(
-    () => baseCost * CONTINGENCY_RATE,
-    [baseCost]
-  );
-  const subtotal = useMemo(
-    () => baseCost + contingency,
-    [baseCost, contingency]
-  );
+  const contingency = useMemo(() => baseCost * CONTINGENCY_RATE, [baseCost]);
+  const subtotal = useMemo(() => baseCost + contingency, [baseCost, contingency]);
 
   /* === Helpers edición horas extra patrón === */
   const updateOvertimeDayPattern = (
@@ -1094,9 +1100,7 @@ const CalculadoraCotizaciones: React.FC = () => {
                   <span className={styles.resultsLabel}>
                     Horas extra (con aportes)
                   </span>
-                  <span className={styles.resultsValue}>
-                    {fmt(totalOvertime)}
-                  </span>
+                  <span className={styles.resultsValue}>{fmt(totalOvertime)}</span>
                 </div>
                 <div
                   className={styles.resultsRow}
@@ -1652,9 +1656,7 @@ const CalculadoraCotizaciones: React.FC = () => {
                               step={5}
                               inputMode="numeric"
                               value={
-                                cfg.mealMinutes === 0
-                                  ? ""
-                                  : cfg.mealMinutes
+                                cfg.mealMinutes === 0 ? "" : cfg.mealMinutes
                               }
                               onChange={(e) =>
                                 setState((s) => {
@@ -1673,7 +1675,9 @@ const CalculadoraCotizaciones: React.FC = () => {
                                 })
                               }
                               className={styles.input}
-                              placeholder={defaultMeal ? String(defaultMeal) : "0"}
+                              placeholder={
+                                defaultMeal ? String(defaultMeal) : "0"
+                              }
                             />
                           </td>
                           <td>
@@ -1822,7 +1826,9 @@ const CalculadoraCotizaciones: React.FC = () => {
 
               <div className={styles.resultsSubTitle}>Ayudante</div>
               <div className={styles.resultsRow}>
-                <span className={styles.resultsLabel}>Cantidad de ayudantes</span>
+                <span className={styles.resultsLabel}>
+                  Cantidad de ayudantes
+                </span>
                 <span className={styles.resultsValue}>{state.qtyHelpers}</span>
               </div>
               <div className={styles.resultsRow}>

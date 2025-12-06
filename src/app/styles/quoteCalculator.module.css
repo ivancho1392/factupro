@@ -39,7 +39,7 @@
   padding: 8px 14px;
   cursor: pointer;
   font-size: 0.85rem;
-  transition: background .15s ease, transform .05s ease;
+  transition: background 0.15s ease, transform 0.05s ease;
 }
 .tabBtn:hover {
   background: #e5e7eb;
@@ -56,7 +56,7 @@
   background: var(--white);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   margin-bottom: 14px;
 }
 
@@ -123,7 +123,7 @@
 .input:focus,
 .select:focus {
   border-color: var(--blue-3);
-  box-shadow: 0 0 0 1px rgba(55, 65, 81, .15);
+  box-shadow: 0 0 0 1px rgba(55, 65, 81, 0.15);
   background: #ffffff;
 }
 
@@ -143,7 +143,8 @@
   border-radius: 8px;
   padding: 9px 14px;
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease, opacity .1s, transform .05s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.1s,
+    transform 0.05s ease;
   border: 1px solid transparent;
   font-size: 0.9rem;
 }
@@ -159,7 +160,7 @@
   white-space: nowrap;
 }
 .btnAdd:hover {
-  opacity: .95;
+  opacity: 0.95;
 }
 
 .btnPrimary {
@@ -307,7 +308,7 @@
   }
 }
 
-
+/* ===== Resultados ===== */
 .resultsGroup {
   display: flex;
   flex-direction: column;
@@ -410,4 +411,63 @@
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--gray-50);
+}
+
+/* ===== Formulario de ítems (Insumos / Transporte / EPP / Otros) ===== */
+/* Siempre en 2 filas:
+   1) Cantidad (1/4) + Descripción (3/4)
+   2) Valor unitario (3/4) + Botón Agregar (1/4)
+*/
+.itemForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.itemFormRow {
+  display: flex;
+  gap: 8px;
+}
+
+/* Primera fila */
+.itemQtyCell {
+  flex: 1;
+  max-width: 140px; /* evita que crezca demasiado en pantallas grandes */
+}
+
+.itemDescCell {
+  flex: 3;
+}
+
+/* Segunda fila */
+.itemUnitCell {
+  flex: 3;
+  max-width: 260px; /* garantiza espacio suficiente para el placeholder */
+}
+
+.itemAddCell {
+  flex: 1;
+  max-width: 170px; /* el botón nunca será demasiado ancho */
+  display: flex;
+}
+
+/* El botón ocupa todo el ancho disponible de su celda */
+.itemAddCell .btnAdd {
+  width: 100%;
+  justify-content: center;
+}
+
+/* En pantallas pequeñas apilamos cada fila para máxima legibilidad */
+@media (max-width: 640px) {
+  .itemFormRow {
+    flex-direction: column;
+  }
+
+  .itemQtyCell,
+  .itemDescCell,
+  .itemUnitCell,
+  .itemAddCell {
+    max-width: 100%;
+  }
 }
