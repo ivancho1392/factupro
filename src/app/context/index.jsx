@@ -11,7 +11,7 @@ export const AppProvider = ({ children }) => {
   const [menuAccount, setMenuAccount] = useState(false);
   const [role, setRole] = useState(null);
   const [invoiceDataByMonth, setInvoiceDataByMonth] = useState({});
-  const [currentMonth, setCurrentMonth] = useState("");
+  const [currentPeriod, setCurrentPeriod] = useState("");
 
   const openModal = () => {
     setModal(true);
@@ -41,10 +41,10 @@ export const AppProvider = ({ children }) => {
     setMenuAccount(false);
   };
 
-  const updateInvoiceDataByMonth = (month, data) => {
+  const updateInvoiceDataByMonth = (periodKey, data) => {
     setInvoiceDataByMonth((prevState) => ({
       ...prevState,
-      [month]: data,
+      [periodKey]: data,
     }));
   };
 
@@ -68,8 +68,11 @@ export const AppProvider = ({ children }) => {
         setRole,
         invoiceDataByMonth,
         updateInvoiceDataByMonth,
-        currentMonth,
-        setCurrentMonth,
+        currentPeriod,
+        setCurrentPeriod,
+        // Legacy aliases for backward compatibility
+        currentMonth: currentPeriod,
+        setCurrentMonth: setCurrentPeriod,
       }}
     >
       {children}

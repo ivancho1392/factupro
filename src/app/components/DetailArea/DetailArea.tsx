@@ -2,7 +2,7 @@ import React from "react";
 import InvoiceConsult from "../invoiceConsult";
 import InvoiceUpload from "../invoiceUpload";
 import InvoiceUploadIA from "../invoiceUploadIA";
-import CalculadoraCotizaciones from "../quoteCalculator"; 
+import CalculadoraCotizaciones from "../quoteCalculator";
 import { Pie } from "react-chartjs-2";
 import styles from "../../styles/detailArea.module.css";
 import { chartColors } from "../../home/colors";
@@ -19,12 +19,13 @@ interface DetailAreaProps {
     role: string;
     invoiceDataByMonth: Record<string, any>;
     currentMonth: string;
+    currentPeriod: string;
   };
 }
 
 const monthNames = [
-  "Enero","Febrero","Marzo","Abril","Mayo","Junio",
-  "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre",
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre",
 ];
 const getMonthName = (monthNumber: string) => {
   const index = parseInt(monthNumber, 10) - 1;
@@ -32,8 +33,11 @@ const getMonthName = (monthNumber: string) => {
 };
 
 const DetailArea: React.FC<DetailAreaProps> = ({ activeComponent, context }) => {
-  const { invoiceDataByMonth, role, currentMonth } = context;
-  const currentMonthData = invoiceDataByMonth[currentMonth] || {};
+  const { invoiceDataByMonth, role, currentPeriod } = context;
+  const currentMonthData = invoiceDataByMonth[currentPeriod] || {};
+
+  // Parse year and month from currentPeriod (format: YYYY-MM)
+  const [year, month] = currentPeriod ? currentPeriod.split("-") : ["", ""];
 
   const data = {
     labels: Object.keys(currentMonthData),
@@ -53,7 +57,7 @@ const DetailArea: React.FC<DetailAreaProps> = ({ activeComponent, context }) => 
       {/* Títulos contextuales */}
       {activeComponent === "consult" && (
         <h2 className="text-2xl mb-4 text-center">
-          Facturas por categoría {getMonthName(currentMonth)} de 2024
+          Facturas por categoría {getMonthName(month)} de {year || new Date().getFullYear()}
         </h2>
       )}
 
@@ -82,38 +86,38 @@ const DetailArea: React.FC<DetailAreaProps> = ({ activeComponent, context }) => 
 
       {/* Gráfico o bienvenida si no hay módulo activo ni datos */}
       {!["consult", "upload", "uploadIA", "calculator"].includes(activeComponent || "") && isEmptyData ? (
-      <section className={styles.hero}>
-        <div className={styles.heroText}>
-          <h2 className={styles.heroTitle}>Bienvenido a FactuPro</h2>
-          <p className={styles.heroP}>
-            Registra, organiza y consulta tus facturas en un solo lugar.
-            Genera reportes por mes y categoría, exporta a PDF o Excel y
-            analiza tus gastos con gráficos automáticos.
-          </p>
-          <ul className={styles.heroList}>
-            <li> Carga y consulta de facturas</li>
-            <li> Análisis inteligente</li>
-            <li> Facturas categorizadas</li>
-          </ul>
-          <p className={styles.heroFoot}>
-            Usa el menú lateral para empezar. Si necesitas ayuda, contacta al administrador.
-          </p>
-        </div>
+        <section className={styles.hero}>
+          <div className={styles.heroText}>
+            <h2 className={styles.heroTitle}>Bienvenido a FactuPro</h2>
+            <p className={styles.heroP}>
+              Registra, organiza y consulta tus facturas en un solo lugar.
+              Genera reportes por mes y categoría, exporta a PDF o Excel y
+              analiza tus gastos con gráficos automáticos.
+            </p>
+            <ul className={styles.heroList}>
+              <li> Carga y consulta de facturas</li>
+              <li> Análisis inteligente</li>
+              <li> Facturas categorizadas</li>
+            </ul>
+            <p className={styles.heroFoot}>
+              Usa el menú lateral para empezar. Si necesitas ayuda, contacta al administrador.
+            </p>
+          </div>
 
-        <div className={styles.heroImageWrap}>
-          <Image
-            src="/image1.png"
-            alt="Funcionalidades de FactuPro"
-            fill
-            className={styles.heroImage}
-            sizes="(max-width: 768px) 100vw, 50vw"
-            priority
-          />
-        </div>
-      </section>
-    ) : (
-      !isEmptyData && activeComponent !== "calculator" && <Pie data={data} />
-    )}
+          <div className={styles.heroImageWrap}>
+            <Image
+              src="/image1.png"
+              alt="Funcionalidades de FactuPro"
+              fill
+              className={styles.heroImage}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+            />
+          </div>
+        </section>
+      ) : (
+        !isEmptyData && activeComponent !== "calculator" && <Pie data={data} />
+      )}
     </main>
   );
 };

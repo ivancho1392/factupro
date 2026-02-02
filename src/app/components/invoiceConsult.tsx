@@ -38,7 +38,8 @@ const InvoiceConsult: React.FC = () => {
   const [itbmsAmount, setItbmsAmount] = useState<number>(0);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
   const [fileKeyToDelete, setFileKeyToDelete] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState<string>("2024");
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState<string>(String(currentYear));
 
   // Calcular totales
   useEffect(() => {
@@ -112,9 +113,10 @@ const InvoiceConsult: React.FC = () => {
             },
             {}
           );
-          context.updateInvoiceDataByMonth(month, invoiceDataByCategory);
-          context.setCurrentMonth(month);
-          console.log("actual month:", context.currentMonth);
+          const yearMonth = `${selectedYear}-${month}`;
+          context.updateInvoiceDataByMonth(yearMonth, invoiceDataByCategory);
+          context.setCurrentMonth(yearMonth);
+          console.log("actual period:", context.currentMonth);
         } catch (error: any) {
           if (error.message === "Unauthorized") {
             toast.error(
@@ -287,8 +289,18 @@ const InvoiceConsult: React.FC = () => {
         value={selectedYear}
         onChange={handleYearChange}
       >
-        <option value="2024">2024</option>
-        <option value="2025">2025</option>
+        {(() => {
+          const START_YEAR = 2024;
+          const years = Array.from(
+            { length: currentYear - START_YEAR + 2 },
+            (_, i) => String(START_YEAR + i)
+          );
+          return years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ));
+        })()}
       </select>
 
       {/* Select para categorías */}
