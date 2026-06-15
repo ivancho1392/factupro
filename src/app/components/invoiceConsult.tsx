@@ -146,7 +146,7 @@ const InvoiceConsult: React.FC = () => {
     filterInvoices(invoices, selectedCategory);
   };
 
-  const filterInvoices = (invoicesToFilter: Invoice[], category: string) => {
+  function filterInvoices(invoicesToFilter: Invoice[], category: string) {
     if (category !== "") {
       const filtered = invoicesToFilter.filter(
         (invoice) => invoice.category === category
@@ -155,7 +155,7 @@ const InvoiceConsult: React.FC = () => {
     } else {
       setFilteredInvoices(invoicesToFilter);
     }
-  };
+  }
 
   const handleGenerateReport = () => {
     generateReport({

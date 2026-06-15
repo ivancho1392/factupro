@@ -120,13 +120,19 @@ export const getUserRoles = (): Promise<string[]> => {
 };
 
 export const logout = (): Promise<void> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const user = getCurrentUser();
+
     if (user) {
       user.signOut();
-      resolve();
-    } else {
-      resolve();
     }
+
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("idToken");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+    }
+
+    resolve();
   });
 };

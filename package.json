@@ -6,19 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
-    "amazon-cognito-identity-js": "^6.3.16",
+    "amazon-cognito-identity-js": "^6.3.17",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
+    "js-cookie": "^3.0.8",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
     "jwt-decode": "^4.0.0",
-    "next": "^14.2.35",
+    "next": "^16.2.9",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
@@ -26,12 +27,13 @@
     "react-toastify": "^10.0.5"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "^14.2.35",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.9",
     "postcss": "^8.5.15",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
