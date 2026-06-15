@@ -10,21 +10,20 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
-    "amazon-cognito-identity-js": "^6.3.12",
+    "amazon-cognito-identity-js": "^6.3.16",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
-    "jspdf": "^2.5.2",
-    "jspdf-autotable": "^5.0.2",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "jwt-decode": "^4.0.0",
-    "next": "14.2.3",
+    "next": "^14.2.35",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
     "react-icons": "5.2.1",
-    "react-toastify": "^10.0.5",
-    "xlsx": "^0.18.5"
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",
@@ -32,8 +31,8 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3",
-    "postcss": "^8",
+    "eslint-config-next": "^14.2.35",
+    "postcss": "^8.5.15",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
