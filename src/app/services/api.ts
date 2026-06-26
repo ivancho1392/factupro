@@ -9,9 +9,29 @@ interface InvoiceData {
   Subtotal: number;
 }
 
+function getCreateInvoiceEndpoint() {
+  const url = process.env.NEXT_PUBLIC_CREATE_INVOICE_ENDPOINT;
+
+  if (!url) {
+    throw new Error('Missing NEXT_PUBLIC_CREATE_INVOICE_ENDPOINT');
+  }
+
+  return url;
+}
+
+function getAnalyzeInvoiceIAEndpoint() {
+  const url = process.env.NEXT_PUBLIC_ANALYZE_INVOICE_IA_ENDPOINT;
+
+  if (!url) {
+    throw new Error('Missing NEXT_PUBLIC_ANALYZE_INVOICE_IA_ENDPOINT');
+  }
+
+  return url;
+}
+
 export async function createInvoice(data: InvoiceData): Promise<any> {
   const token = localStorage.getItem('idToken');
-  const url = process.env.CREATE_INVOICE_ENDPOINT || 'https://k9nm0v7rpk.execute-api.us-east-1.amazonaws.com/dev/invoice';
+  const url = getCreateInvoiceEndpoint();
   
   const response = await fetch(url, {
     method: 'POST',
@@ -37,7 +57,7 @@ export async function createInvoice(data: InvoiceData): Promise<any> {
 
 export async function analyzeInvoiceIA(data: { Content: string }): Promise<any> {
   const token = localStorage.getItem('idToken');
-  const url = process.env.ANALYZE_INVOICE_IA_ENDPOINT || 'https://k9nm0v7rpk.execute-api.us-east-1.amazonaws.com/dev/InvoiceFunctionIA';
+  const url = getAnalyzeInvoiceIAEndpoint();
 
   const response = await fetch(url, {
     method: 'POST',
@@ -58,7 +78,7 @@ export async function analyzeInvoiceIA(data: { Content: string }): Promise<any> 
 
 export async function getInvoices(month?: string): Promise<any> {
   const token = localStorage.getItem('idToken');
-  const url = new URL(process.env.CREATE_INVOICE_ENDPOINT || 'https://k9nm0v7rpk.execute-api.us-east-1.amazonaws.com/dev/invoice');
+  const url = new URL(getCreateInvoiceEndpoint());
   
   if (month) {
     url.searchParams.append('month', month);
@@ -90,7 +110,7 @@ export async function getInvoices(month?: string): Promise<any> {
 
 export async function deleteInvoice(invoiceId: string, fileKey: string): Promise<any> {
   const token = localStorage.getItem('idToken');
-  const url = new URL(process.env.CREATE_INVOICE_ENDPOINT || 'https://k9nm0v7rpk.execute-api.us-east-1.amazonaws.com/dev/invoice');
+  const url = new URL(getCreateInvoiceEndpoint());
   const fileUrl : string = extractFileKey(fileKey);
 
   if (invoiceId) {
@@ -127,4 +147,3 @@ function extractFileKey(url: any) {
   if (end === -1) return null;
   return url.substring(start, end);
 }
-

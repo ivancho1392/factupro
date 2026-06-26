@@ -7,16 +7,78 @@ interface DecodedIdToken {
   'cognito:groups'?: string[];
 }
 
-// Reemplaza estos valores con los de tu User Pool
+const userPoolId = process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID;
+const clientId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
+
+if (!userPoolId || !clientId) {
+  throw new Error('Missing Cognito environment variables');
+}
+
 const poolData = {
-  UserPoolId: process.env.USER_POOL_ID || 'us-east-1_TCG58RR5U',
-  ClientId: process.env.CLIENT_ID || '5t043hsh449dc84u15076fvgbo',      
+  UserPoolId: userPoolId,
+  ClientId: clientId,
 };
 
 const userPool = new CognitoUserPool(poolData);
 
 export const getCurrentUser = () => {
   return userPool.getCurrentUser();
+};
+
+export const validatePasswordPolicy = (password: string): { valid: boolean; errors: string[] } => {
+  const errors: string[] = [];
+
+  if (password.length < 12) {
+    errors.push('La contraseña debe tener al menos 12 caracteres.');
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    errors.push('La contraseña debe incluir al menos una letra mayúscula.');
+  }
+
+  if (!/[a-z]/.test(password)) {
+    errors.push('La contraseña debe incluir al menos una letra minúscula.');
+  }
+
+  if (!/[0-9]/.test(password)) {
+    errors.push('La contraseña debe incluir al menos un número.');
+  }
+
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    errors.push('La contraseña debe incluir al menos un símbolo.');
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+};
+
+export const changePassword = (currentPassword: string, newPassword: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const cognitoUser = userPool.getCurrentUser();
+
+    if (!cognitoUser) {
+      reject(new Error('No hay una sesión activa.'));
+      return;
+    }
+
+    cognitoUser.getSession((sessionError: Error | null, session: { isValid: () => boolean } | null) => {
+      if (sessionError || !session?.isValid()) {
+        reject(new Error('La sesión no es válida. Inicia sesión nuevamente.'));
+        return;
+      }
+
+      cognitoUser.changePassword(currentPassword, newPassword, (changeError) => {
+        if (changeError) {
+          reject(new Error('No se pudo cambiar la contraseña. Verifica la contraseña actual e intenta nuevamente.'));
+          return;
+        }
+
+        resolve();
+      });
+    });
+  });
 };
 
 export const login = (email: string, password: string): Promise<any> => {
