@@ -6,7 +6,7 @@ import styles from "./styles.module.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GrWaypoint } from "react-icons/gr";
-import { HiOutlineWrench, HiOutlinePhoto } from "react-icons/hi2";
+import { HiOutlineWrench, HiOutlinePhoto, HiOutlineKey } from "react-icons/hi2";
 import { AiOutlineTeam } from "react-icons/ai";
 import { AppContext } from "../../context/index";
 import { logout } from "@/app/services/authService";
@@ -43,6 +43,17 @@ const Menu = () => {
       <div className={menuAccount ? styles.menuopen : styles.menuclose}>
         {menuAccount && (
           <>
+            <Link
+              href="/change-password"
+              onClick={closeAccountMenu}
+              className={styles.menuitem}
+            >
+              <div className={styles.icon}>
+                <HiOutlineKey />
+              </div>
+              <div className={styles.name}>Cambiar contraseña</div>
+            </Link>
+
             <div onClick={handleLogout} className={styles.menuitem}>
               <div className={styles.icon}>
                 <HiOutlinePhoto />
