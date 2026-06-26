@@ -39,6 +39,7 @@ const HomePage: React.FC = () => {
           <h1>Bienvenido</h1>
           <h1>¡Nos alegra verte aquí!, Ingresa tus credenciales para continuar</h1>
           <AuthForm mode="login" onSubmit={handleLogin} />
+          <p><Link href="/forgot-password">¿Olvidaste tu contraseña?</Link></p>
           <p>¿Nuevo aquí? <Link href="/sign-up">Regístrate ahora</Link></p>
           <ToastContainer />
     </div>
