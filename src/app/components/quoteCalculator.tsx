@@ -192,8 +192,8 @@ const createEmptyScheduleWeek = (): ScheduleWeekConfig => ({
 });
 
 const DEFAULT_STATE: PersistedState = {
-  techHourlyRate: 5.7,
-  helperHourlyRate: 4.18,
+  techHourlyRate: 6.2,
+  helperHourlyRate: 4.5,
   contractHoursPerMonth: CONTRACT_HOURS_DEFAULT,
   itemsSupplies: [],
   itemsTransport: [],
