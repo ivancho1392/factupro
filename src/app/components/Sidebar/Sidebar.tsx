@@ -36,12 +36,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeComponent, setActiveComponent }
       >
         Consultar Facturas {activeComponent === "consult" ? <IoCloseSharp /> : <FaChevronDown />}
       </button>
-      <button
+      {/* <button
         className={`${styles.buttonSide} ${activeComponent === "uploadIA" ? styles.active : ""}`}
         onClick={() => handleOptionClick(activeComponent === "uploadIA" ? null : "uploadIA")}
       >
         Cargar con IA {activeComponent === "uploadIA" ? <IoCloseSharp /> : <FaChevronDown />}
-      </button>
+      </button> */}
       <button
         className={`${styles.buttonSide} ${activeComponent === "calculator" ? styles.active : ""}`}
         onClick={() => handleOptionClick(activeComponent === "calculator" ? null : "calculator")}
